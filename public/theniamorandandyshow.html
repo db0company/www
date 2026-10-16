@@ -1,0 +1,633 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>The Niamor & Andy Show | Liens</title>
+  <meta name="description" content="Tous les liens du show: insta principal, artistes, team, lieu, billetterie." />
+  <style>
+    :root{
+      --bg1:#0b0b10;
+      --bg2:#141424;
+      --card:#10101a;
+      --border:rgba(255,255,255,.10);
+      --text:rgba(255,255,255,.92);
+      --muted:rgba(255,255,255,.70);
+      --accent:#b58cff;
+      --accent2:#ff7ad9;
+      --shadow: 0 18px 60px rgba(0,0,0,.55);
+      --radius:18px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      color:var(--text);
+      background:
+        radial-gradient(1200px 700px at 15% 0%, rgba(181,140,255,.18), transparent 55%),
+        radial-gradient(900px 600px at 85% 10%, rgba(255,122,217,.14), transparent 55%),
+        linear-gradient(180deg, var(--bg2), var(--bg1));
+      min-height:100vh;
+      padding:28px 16px 44px;
+    }
+    .wrap{
+      max-width:560px;
+      margin:0 auto;
+    }
+    .card{
+      background: rgba(16,16,26,.72);
+      border:1px solid var(--border);
+      backdrop-filter: blur(10px);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .hero{
+      padding:18px 18px 16px;
+      text-align:center;
+    }
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding:10px 12px;
+      border-radius: 999px;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.06);
+      margin-bottom:12px;
+      font-size:14px;
+      color:var(--muted);
+    }
+    .dot{
+      width:10px;height:10px;border-radius:999px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      box-shadow: 0 0 0 4px rgba(181,140,255,.12);
+    }
+    h1{
+      margin:0;
+      font-size:26px;
+      line-height:1.15;
+      letter-spacing:.2px;
+    }
+    .sub{
+      margin:10px 0 0;
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.45;
+    }
+    .img-slot{
+      margin:16px 18px 0;
+      border-radius: 16px;
+      background: rgba(255,255,255,.05);
+      overflow:hidden;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      aspect-ratio: 16/9;
+      position:relative;
+    }
+    .img-slot img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .section{
+      padding:18px;
+      border-top: 1px solid var(--border);
+    }
+    .section h2{
+      margin:0 0 10px;
+      font-size:14px;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      color:rgba(255,255,255,.72);
+    }
+    .btn{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      width:100%;
+      text-decoration:none;
+      color:var(--text);
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.06);
+      padding:14px 14px;
+      border-radius: 14px;
+      transition: transform .08s ease, background .2s ease, border-color .2s ease;
+      margin:10px 0;
+    }
+    .btn:hover{
+      transform: translateY(-1px);
+      background: rgba(255,255,255,.09);
+      border-color: rgba(255,255,255,.18);
+    }
+    .left{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      min-width:0;
+    }
+    .icon{
+      width:34px;height:34px;border-radius: 12px;
+      background: linear-gradient(135deg, rgba(181,140,255,.25), rgba(255,122,217,.20));
+      border:1px solid rgba(255,255,255,.12);
+      display:flex;align-items:center;justify-content:center;
+      flex:0 0 auto;
+      font-size:16px;
+    }
+    .label{
+      display:flex;
+      flex-direction:column;
+      gap:2px;
+      min-width:0;
+    }
+    .label b{
+      font-size:14px;
+      font-weight:650;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .label span{
+      font-size:12px;
+      color:var(--muted);
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .arrow{
+      color:rgba(255,255,255,.55);
+      flex:0 0 auto;
+      margin-left:10px;
+      font-size:18px;
+    }
+    .footer{
+      text-align:center;
+      margin-top:14px;
+      color:rgba(255,255,255,.50);
+      font-size:12px;
+    }
+    .pill{
+      display:inline-block;
+      padding:8px 10px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.05);
+    }
+
+    /* --- CSS POUR LES ACCORDÉONS D'ARTISTES --- */
+    details {
+      background: rgba(255,255,255,.02);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      margin: 10px 0;
+      overflow: hidden;
+      transition: background 0.2s ease;
+    }
+    details[open] {
+      background: rgba(255,255,255,.04);
+      border-color: rgba(255,255,255,.15);
+    }
+    summary {
+      padding: 16px 14px;
+      font-weight: 600;
+      font-size: 15px;
+      cursor: pointer;
+      list-style: none; /* Cache la flèche par défaut */
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: var(--text);
+    }
+    summary::-webkit-details-marker {
+      display: none;
+    }
+    .summary-arrow {
+      transition: transform 0.3s ease;
+      color: rgba(255,255,255,.55);
+      font-size: 14px;
+    }
+    details[open] summary .summary-arrow {
+      transform: rotate(180deg);
+    }
+    .details-content {
+      padding: 0 14px 4px;
+    }
+    .details-content .img-slot {
+      margin: 0 0 14px 0; /* Ajuste les marges pour l'image dans l'accordéon */
+    }
+    .details-content .btn {
+      margin: 8px 0;
+    }
+  </style>
+</head>
+
+<body>
+  <main class="wrap">
+    <div class="card">
+      <div class="hero">
+        <div class="badge"><span class="dot"></span> Scène ouverte drag + DJ set ✨</div>
+        <h1>The Niamor &amp; Andy Show</h1>
+        <p class="sub">
+          Tous les Insta du show, des artistes, de la team, du lieu, et la billetterie 💖
+        </p>
+      </div>
+
+      <div class="img-slot">
+        <img src="https://i.imgur.com/dBNgzmO.jpeg">
+      </div>
+
+      <div class="section">
+        <a class="btn" href="https://www.instagram.com/theniamorandandyshow/" target="_blank" rel="noopener">
+          <div class="left">
+            <div class="icon">🎭</div>
+            <div class="label">
+              <b>@theniamorandandyshow</b>
+              <span>Le show (infos + actus)</span>
+            </div>
+          </div>
+          <div class="arrow">↗</div>
+        </a>
+
+        <a class="btn" href="https://shotgun.live/en/events/the-niamor-andy-show-all-stars-of-pride" target="_blank" rel="noopener">
+          <div class="left">
+            <div class="icon">🎫</div>
+            <div class="label">
+              <b>Billetterie</b>
+              <span>Achète ta place</span>
+            </div>
+          </div>
+          <div class="arrow">↗</div>
+        </a>
+      </div>
+
+      <div class="section">
+        <h2>Monestres de cérémonie</h2>
+
+        <a class="btn" href="https://www.instagram.com/niamor.music/" target="_blank" rel="noopener">
+          <div class="left">
+            <div class="icon">🎩</div>
+            <div class="label">
+              <b>@niamor.music</b>
+              <span>Monestre de cérémonie</span>
+            </div>
+          </div>
+          <div class="arrow">↗</div>
+        </a>
+
+        <a class="btn" href="https://www.instagram.com/andy.malheiro/" target="_blank" rel="noopener">
+          <div class="left">
+            <div class="icon">🪩</div>
+            <div class="label">
+              <b>@andy.malheiro</b>
+              <span>Monestre de cérémonie + DJ set</span>
+            </div>
+          </div>
+          <div class="arrow">↗</div>
+        </a>
+      </div>
+
+      <div class="section">
+        <h2>Team & lieu</h2>
+
+        <a class="btn" href="https://www.instagram.com/db0company/" target="_blank" rel="noopener">
+          <div class="left">
+            <div class="icon">🎨</div>
+            <div class="label">
+              <b>@db0company</b>
+              <span>Illustrations et graphisme - Stand sur place de prints</span>
+            </div>
+          </div>
+          <div class="arrow">↗</div>
+        </a>
+
+        <a class="btn" href="https://www.instagram.com/cadreur_desoeuvre/" target="_blank" rel="noopener">
+          <div class="left">
+            <div class="icon">📸</div>
+            <div class="label"><b>@cadreur_desoeuvre</b><span>Photographe</span></div>
+          </div>
+          <div class="arrow">↗</div>
+        </a>
+
+        <a class="btn" href="https://www.instagram.com/nalicebd/" target="_blank" rel="noopener">
+          <div class="left">
+            <div class="icon">🎚️</div>
+            <div class="label"><b>@nalicebd</b><span>Régie son & lumières</span></div>
+          </div>
+          <div class="arrow">↗</div>
+        </a>
+
+        <a class="btn" href="https://www.instagram.com/chez_olympe/" target="_blank" rel="noopener">
+          <div class="left">
+            <div class="icon">🍸</div>
+            <div class="label"><b>@chez_olympe</b><span>Le lieu (Pantin)</span></div>
+          </div>
+          <div class="arrow">↗</div>
+        </a>
+      </div>
+
+      <div class="section">
+        <h2>Artistes</h2>
+
+        <details name="editions" open>
+          <summary>
+            <span>📅 19 juin 2026 - All Stars of Pride</span>
+            <span class="summary-arrow">▼</span>
+          </summary>
+          <div class="details-content">
+            <a class="btn" href="https://www.instagram.com/ouialma/" target="_blank" rel="noopener">
+              <div class="left">
+                <div class="icon">✨</div>
+                <div class="label"><b>@ouialma</b><span>ALMA DOVAR</span></div>
+              </div>
+              <div class="arrow">↗</div>
+            </a>
+            <a class="btn" href="https://www.instagram.com/camille_ma_fille/" target="_blank" rel="noopener">
+              <div class="left">
+                <div class="icon">✨</div>
+                <div class="label"><b>@camille_ma_fille</b><span>CAMILLE MA FILLE</span></div>
+              </div>
+              <div class="arrow">↗</div>
+            </a>
+            <a class="btn" href="https://www.instagram.com/le_petit_doug_doug/" target="_blank" rel="noopener">
+              <div class="left">
+                <div class="icon">✨</div>
+                <div class="label"><b>@le_petit_doug_doug</b><span>LE PETIT DOUG DOUG</span></div>
+              </div>
+              <div class="arrow">↗</div>
+            </a>
+            <a class="btn" href="https://www.instagram.com/nin__amore/" target="_blank" rel="noopener">
+              <div class="left">
+                <div class="icon">✨</div>
+                <div class="label"><b>@nin__amore</b><span>NIN AMORE</span></div>
+              </div>
+              <div class="arrow">↗</div>
+            </a>
+            <a class="btn" href="https://www.instagram.com/jiningmagma/" target="_blank" rel="noopener">
+              <div class="left">
+                <div class="icon">✨</div>
+                <div class="label"><b>@jiningmagma</b><span>MAGMA</span></div>
+              </div>
+              <div class="arrow">↗</div>
+            </a>
+          </div>
+        </details>
+
+        <details name="editions">
+          <summary>
+            <span>📅 24 avril 2026 - Spring Realness</span>
+            <span class="summary-arrow">▼</span>
+          </summary>
+          <div class="details-content">
+            <div class="img-slot">
+              <img src="https://i.imgur.com/8quSvxX.jpeg" alt="Affiche 24 avril">
+            </div>
+            <a class="btn" href="https://www.instagram.com/mec.a.nique_jesuis/" target="_blank" rel="noopener">
+              <div class="left">
+                <div class="icon">✨</div>
+                <div class="label"><b>@mec.a.nique_jesuis</b><span>MEC.A.NIQUÉ</span></div>
+              </div>
+              <div class="arrow">↗</div>
+            </a>
+            <a class="btn" href="https://www.instagram.com/missracolage/" target="_blank" rel="noopener">
+              <div class="left">
+                <div class="icon">✨</div>
+                <div class="label"><b>@missracolage</b><span>MISS RACOLAGE</span></div>
+              </div>
+              <div class="arrow">↗</div>
+            </a>
+            <a class="btn" href="https://www.instagram.com/l.homme.a.la.rose/" target="_blank" rel="noopener">
+              <div class="left">
+                <div class="icon">✨</div>
+                <div class="label"><b>@l.homme.a.la.rose</b><span>STEVEN FOSTER. Y</span></div>
+              </div>
+              <div class="arrow">↗</div>
+            </a>
+            <a class="btn" href="https://www.instagram.com/bossenby/" target="_blank" rel="noopener">
+              <div class="left">
+                <div class="icon">✨</div>
+                <div class="label"><b>@bossenby</b><span>VARDYKE</span></div>
+              </div>
+              <div class="arrow">↗</div>
+            </a>
+          </div>
+        </details>
+
+        <details name="editions">
+          <summary>
+            <span>📅 13 février 2026 - Sweet Valentine</span>
+            <span class="summary-arrow">▼</span>
+          </summary>
+          <div class="details-content">
+            <div class="img-slot">
+              <img src="https://i.imgur.com/tpItDCf.jpeg" alt="Affiche 13 février">
+            </div>
+            <a class="btn" href="https://www.instagram.com/ouialma/" target="_blank" rel="noopener">
+              <div class="left">
+                <div class="icon">✨</div>
+                <div class="label"><b>@ouialma</b><span>ALMA DOVAR</span></div>
+              </div>
+              <div class="arrow">↗</div>
+            </a>
+            <a class="btn" href="https://www.instagram.com/lady_kellydonia/" target="_blank" rel="noopener">
+              <div class="left">
+                <div class="icon">✨</div>
+                <div class="label"><b>@lady_kellydonia</b><span>KELLY DONIA</span></div>
+              </div>
+              <div class="arrow">↗</div>
+            </a>
+            <a class="btn" href="https://www.instagram.com/kokorital93/" target="_blank" rel="noopener">
+              <div class="left">
+                <div class="icon">✨</div>
+                <div class="label"><b>@kokorital93</b><span>KOKORITAL</span></div>
+              </div>
+              <div class="arrow">↗</div>
+            </a>
+            <a class="btn" href="https://www.instagram.com/jiningmagma/" target="_blank" rel="noopener">
+              <div class="left">
+                <div class="icon">✨</div>
+                <div class="label"><b>@jiningmagma</b><span>MAGMA</span></div>
+              </div>
+              <div class="arrow">↗</div>
+            </a>
+          </div>
+        </details>
+
+        <details name="editions">
+          <summary>
+            <span>📅 20 décembre 2025 - Christmas Extravaganza</span>
+            <span class="summary-arrow">▼</span>
+          </summary>
+          <div class="details-content">
+            <div class="img-slot">
+              <img src="https://i.imgur.com/QDYtTZu.jpeg" alt="Affiche 20 décembre">
+            </div>
+            <a class="btn" href="https://www.instagram.com/theedcount/" target="_blank" rel="noopener">
+              <div class="left">
+                <div class="icon">✨</div>
+                <div class="label"><b>@theedcount</b><span>Arthur Thee Dcount</span></div>
+              </div>
+              <div class="arrow">↗</div>
+            </a>
+            <a class="btn" href="https://www.instagram.com/thegabribelle/" target="_blank" rel="noopener">
+              <div class="left">
+                <div class="icon">✨</div>
+                <div class="label"><b>@thegabribelle</b><span>GabriBelle</span></div>
+              </div>
+              <div class="arrow">↗</div>
+            </a>
+            <a class="btn" href="https://www.instagram.com/_la.trouille/" target="_blank" rel="noopener">
+              <div class="left">
+                <div class="icon">✨</div>
+                <div class="label"><b>@_la.trouille</b><span>La Trouille</span></div>
+              </div>
+              <div class="arrow">↗</div>
+            </a>
+            <a class="btn" href="https://www.instagram.com/lorentz.ivorra/" target="_blank" rel="noopener">
+              <div class="left">
+                <div class="icon">✨</div>
+                <div class="label"><b>@lorentz.ivorra</b><span>Lorentz Ivorra</span></div>
+              </div>
+              <div class="arrow">↗</div>
+            </a>
+            <a class="btn" href="https://www.instagram.com/scorpius.musica/" target="_blank" rel="noopener">
+              <div class="left">
+                <div class="icon">✨</div>
+                <div class="label"><b>@scorpius.musica</b><span>Scorpius</span></div>
+              </div>
+              <div class="arrow">↗</div>
+            </a>
+          </div>
+        </details>
+
+        <details name="editions">
+          <summary>
+            <span>📅 31 octobre 2025 - Dancing Queer Halloween</span>
+            <span class="summary-arrow">▼</span>
+          </summary>
+          <div class="details-content">
+            <div class="img-slot">
+              <img src="https://i.imgur.com/RRD3Geu.jpeg" alt="Affiche 31 octobre">
+            </div>
+            <a class="btn" href="https://www.instagram.com/dolly_mortelle/" target="_blank" rel="noopener">
+              <div class="left">
+                <div class="icon">✨</div>
+                <div class="label"><b>@dolly_mortelle</b><span>Artiste</span></div>
+              </div>
+              <div class="arrow">↗</div>
+            </a>
+            <a class="btn" href="https://www.instagram.com/gaby_hexy/" target="_blank" rel="noopener">
+              <div class="left">
+                <div class="icon">✨</div>
+                <div class="label"><b>@gaby_hexy</b><span>Artiste</span></div>
+              </div>
+              <div class="arrow">↗</div>
+            </a>
+            <a class="btn" href="https://www.instagram.com/le_petit_doug_doug/" target="_blank" rel="noopener">
+              <div class="left">
+                <div class="icon">✨</div>
+                <div class="label"><b>@le_petit_doug_doug</b><span>Artiste</span></div>
+              </div>
+              <div class="arrow">↗</div>
+            </a>
+            <a class="btn" href="https://www.instagram.com/nin__amore/" target="_blank" rel="noopener">
+              <div class="left">
+                <div class="icon">✨</div>
+                <div class="label"><b>@nin__amore</b><span>Artiste</span></div>
+              </div>
+              <div class="arrow">↗</div>
+            </a>
+            <a class="btn" href="https://www.instagram.com/solaire_o.tic/" target="_blank" rel="noopener">
+              <div class="left">
+                <div class="icon">✨</div>
+                <div class="label"><b>@solaire_o.tic</b><span>Artiste</span></div>
+              </div>
+              <div class="arrow">↗</div>
+            </a>
+            <a class="btn" href="https://www.instagram.com/x3talx3/" target="_blank" rel="noopener">
+              <div class="left">
+                <div class="icon">✨</div>
+                <div class="label"><b>@x3talx3</b><span>Artiste</span></div>
+              </div>
+              <div class="arrow">↗</div>
+            </a>
+          </div>
+        </details>
+
+        <details name="editions">
+          <summary>
+            <span>📅 28 juin 2025 - Dancing Queer after pride</span>
+            <span class="summary-arrow">▼</span>
+          </summary>
+          <div class="details-content">
+            <div class="img-slot">
+              <img src="https://i.imgur.com/tWbiyU3.jpeg" alt="Affiche 28 juin">
+            </div>
+            <a class="btn" href="https://www.instagram.com/bennybettybitchy/" target="_blank" rel="noopener">
+              <div class="left">
+                <div class="icon">✨</div>
+                <div class="label"><b>@bennybettybitchy</b><span>Artiste</span></div>
+              </div>
+              <div class="arrow">↗</div>
+            </a>
+            <a class="btn" href="https://www.instagram.com/camille_ma_fille/" target="_blank" rel="noopener">
+              <div class="left">
+                <div class="icon">✨</div>
+                <div class="label"><b>@camille_ma_fille</b><span>Artiste</span></div>
+              </div>
+              <div class="arrow">↗</div>
+            </a>
+            <a class="btn" href="https://www.instagram.com/divaofweariness_/" target="_blank" rel="noopener">
+              <div class="left">
+                <div class="icon">✨</div>
+                <div class="label"><b>@divaofweariness_</b><span>Artiste</span></div>
+              </div>
+              <div class="arrow">↗</div>
+            </a>
+            <a class="btn" href="https://www.instagram.com/dr.tzschiizs/" target="_blank" rel="noopener">
+              <div class="left">
+                <div class="icon">✨</div>
+                <div class="label"><b>@dr.tzschiizs</b><span>Artiste</span></div>
+              </div>
+              <div class="arrow">↗</div>
+            </a>
+            <a class="btn" href="https://www.instagram.com/kitsune_satay/" target="_blank" rel="noopener">
+              <div class="left">
+                <div class="icon">✨</div>
+                <div class="label"><b>@kitsune_satay</b><span>Artiste</span></div>
+              </div>
+              <div class="arrow">↗</div>
+            </a>
+            <a class="btn" href="https://www.instagram.com/larsn_lalala/" target="_blank" rel="noopener">
+              <div class="left">
+                <div class="icon">✨</div>
+                <div class="label"><b>@larsn_lalala</b><span>Artiste</span></div>
+              </div>
+              <div class="arrow">↗</div>
+            </a>
+            <a class="btn" href="https://www.instagram.com/nicolas_parfoisjavotte/" target="_blank" rel="noopener">
+              <div class="left">
+                <div class="icon">✨</div>
+                <div class="label"><b>@nicolas_parfoisjavotte</b><span>Artiste</span></div>
+              </div>
+              <div class="arrow">↗</div>
+            </a>
+            <a class="btn" href="https://www.instagram.com/_.pxvlova._/" target="_blank" rel="noopener">
+              <div class="left">
+                <div class="icon">✨</div>
+                <div class="label"><b>@_.pxvlova._</b><span>Artiste</span></div>
+              </div>
+              <div class="arrow">↗</div>
+            </a>
+          </div>
+        </details>
+
+      </div>
+    </div>
+
+    <div class="footer">
+      <span class="pill">🔔 Active les notifications sur insta pour ne jamais rater nos événements !</span>
+    </div>
+  </main>
+</body>
+</html>
