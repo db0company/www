@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+    <meta charset="utf-8">
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css2?family=Spicy+Rice&display=swap" rel="stylesheet" crossorigin="anonymous">
+    <style>
+      @media (max-width: 767px) {
+      }
+      @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Spicy+Rice&display=swap');
+
+      body {
+          font-family: "Arial", sans-serif;
+          font-weight: normal;
+          margin: 0;
+          padding: 0;
+          font-size: 24px;
+      }
+      main {
+          width: 1160px;
+          margin: auto;
+          background: white;
+      }
+      #buttons a {
+        display: inline-block;
+        background: #EE2A7B;
+        padding: 15px;
+        margin: 10px;
+        border-radius: 5px;
+        color: white;
+        text-decoration: none;
+      }
+      #buttons_posts a {
+        display: inline-block;
+        padding: 10px;
+        margin: 5px;
+        border-radius: 10px;
+        text-decoration: none;
+        background: #FFB113;
+        color: white;
+      }
+      ol > li {
+          padding: 20px 0;
+      }
+      h1, h2, h3, h4, h5, h6 {
+          font-weight: 900;
+      }
+      .band-title h3 {
+          font-family: "Spicy Rice", sans-serif;
+          font-weight: 400;
+          font-style: normal;
+          //text-transform: uppercase;
+          padding: 22px 20px;
+          font-size: 1.5em;
+          margin: 10px 0 5px 0;
+          box-sizing: border-box;
+      }
+      .flex-program {
+          display: flex;
+          flex-wrap: wrap;
+          padding: 0 15px;
+      }
+      .flex-program-column {
+          flex-basis: 0;
+          flex-grow: 1;
+          padding: 5px 0;
+      }
+      .program-title {
+          padding: 10px 10px;
+          padding-bottom: 10px;
+      }
+      .program-title h4 {
+          font-size: 1.2em;
+          text-transform: uppercase;
+          margin: 0;
+          padding: 0;
+      }
+      .program-title p {
+          margin: 0;
+          padding: 0;
+          font-size: 0.8em;
+      }
+      .program-title p:before {
+          content: '📍';
+          display: inline-block;
+          font-size: 0.8em;
+          height: 18px;
+          padding-right: 10px;
+      }
+      .program-item {
+          display: flex;
+          align-items: stretch;
+          padding: 0 10px 5px 10px;
+          width: 100%;
+      }
+      .program-item .time {
+          padding-right: 5px;
+          padding-top: 3px;
+      }
+      .program-item .time span {
+          display: inline-block;
+          color: white;
+          padding: 8px;
+          border-radius: 10px;
+          font-weight: bold;
+          width: 100%;
+          box-sizing: border-box;
+          min-width: 101.25px;
+          text-align: center;
+      }
+    .program-item .annotation {
+        text-transform: none;
+        float: right;
+        margin: 0 10px;
+        padding: 4px 10px;
+        font-size: 20px;
+        vertical-align: bottom;
+        color: white;
+        border-radius: 10px;
+    }
+      .program-item h5 {
+          font-size: 1em;
+          margin: 0;
+          padding: 0;
+          font-family: "Spicy Rice", sans-serif;
+          font-weight: 400;
+          font-style: normal;
+          text-transform: uppercase;
+
+      }
+      .program-item p {
+          padding: 0;
+          margin: 0;
+          font-size: 0.8em;
+      }
+      .program-item p:before {
+      //content: '/ ';
+      }
+      .program-item p.x:before {
+          content: '';
+      }
+      .program-item .content {
+          margin-left: 5px;
+      }
+
+      #places {
+      }
+      .place-wrapper {
+          display: inline-block;
+      }
+      .place {
+          padding: 10px;
+          display: flex;
+      }
+      .place-color {
+          width: 50px;
+          height: 50px;
+          border-radius: 10px;
+          display: inline-block;
+      }
+      .place .content {
+          padding: 0 10px;
+      }
+      .place h4, .place p {
+          padding: 0;
+          margin: 0;
+      }
+
+      textarea {
+          width: 100%;
+          height: 400px;
+          display: block;
+      }
+
+      #program2 {
+          text-align: center;
+      }
+
+      #program3 .program-item .content, #program3 .program-item h5, #program3 .program-item p {
+          //display: inline-block;
+      }
+      #program3 p {
+          padding-left: 10px;
+      }
+    #program1 .program-title h4, #program1 .program-title p {
+        display: inline-block;
+    }
+    #program1 .program-title h4 {
+        margin-right: 10px;
+    }
+    </style>
+  </head>
+  <body onload="textarea.init()">
+    <main>
+      <div id="instructions">
+        <h1>Générateur de programme</h1>
+        <ol>
+          <li>Depuis un ordinateur, modifier le programme pour correspondre au programme de cette année.
+            <br><small>⚠️ Faites attention à bien respecter la syntaxe.</small>
+            <br><small>ℹ️ Si vous ne vous en sortez pas avec la syntaxe, vous pouvez utiliser <a href="https://jsonformatter.curiousconcept.com/">cet outil en ligne</a></small>
+            <br><small>ℹ️ Couleurs disponibles : orange, pink, purple, blue</small>
+            <!-- <br><small>ℹ️ Si le spectacle est pour enfants, ajoutez la ligne "kids" suivi de l&apos;âge (exemple : <code>"kids": "4+"</code>). Si le spectacle n&apos;est pas spécifiquement pour les enfants mais adaptés pour adultes et enfants, indiquez <code>"kids": "ok"</code>.</small> -->
+
+            <br><textarea id="program_input" autofocus onkeyup="textarea.save()"></textarea>
+          </li>
+          <li>Une fois que vous aurez cliquer sur l&apos;un des boutons ci-dessous, le programme s&apos;affichera en plein écran. Vous pourrez alors faire une capture d&apos;écran pour vous servir du programme.</li>
+          <li>Optionnel : Pour s&apos;assurer de la qualité maximale, ma méthode est d&apos;imprimer la page, séléctionner "PDF" en destination, puis ajuster les paramètres comme ceci :<ul><li>Page size: A0</li><li>Margins: None</li><li>Scale: 200%</li><li>Background graphics: ✅</li></ul>J&apos;intègre directement le fichier PDF dans mon logiciel d&apos;édition d&apos;images.</li>
+          <li id="buttons">
+            <h5>Dos de flyer</h5>
+            <a href="#program1">Générer le programme au format colonnes</a>
+            - <a href="#program3">Format liste</a>
+            - <a href="#program9">Format texte</a>
+          </li>
+          <li id="buttons_posts">
+            <h5>Posts RS</h5>
+            <ul>
+              <li><a href="#program6">Révélation de la programmation (sans détails précis) (texte)</a></li>
+              <li><a href="#program8">Révélation des lieux et horaires (image 2)</a></li>
+              <li><a href="#program2">Révélation des lieux et horaires (image 3)</a></li>
+              <li><a href="#program7">Révélation des lieux et horaires (texte)</a></li>
+              <li><a href="#program4">Guide pour les enfants (image)</a></li>
+              <li><a href="#program11">Guide pour les enfants (texte)</a></li>
+              <li><a href="#program10">Programme complet todo</a></li>
+              <li><a href="#program5">Pour chaque artiste</a></li>
+              <li><a href="#program12">test</a></li>
+            </ul>
+          </li>
+        </ol>
+
+      </div>
+
+      <div id="result"></div>
+    </main>
+  </body>
+  <script>
+    // Make textarea save content locally
+    window.textarea = {
+        textarea: null,
+        init: function() {
+            this.textarea = document.querySelector('textarea');
+            this.load();
+        },
+        load: function() {
+            let value = localStorage.getItem('text');
+            if (value !== null && value.length > 20) {
+                this.textarea.value = value;
+            }
+        },
+        save: function() {
+            localStorage.setItem('text', this.textarea.value)
+        }
+    }
+
+    // Make back button refresh the page instead
+window.addEventListener( "pageshow", function ( event ) {
+      var historyTraversal = event.persisted ||
+                             ( typeof window.performance != "undefined" &&
+                               window.performance.navigation.type === 2 );
+      if ( historyTraversal ) {
+        window.location.reload();
+      }
+    });
+
+    let colors = {
+        'orange': '#FF7701',
+        'pink': '#FA7ED6',
+        'purple': '#BA2EB7',
+        'blue': '#5CCEFA',
+    };
+
+    function getProgram() {
+        try {
+            let program = JSON.parse($('#program_input').val());
+            $('#instructions').hide();
+            $.each(program, (day_i, day) => {
+                if (day.gradient_a && day.gradient_b) {
+                    let stylesheet = document.styleSheets[0];
+                    let selector = '.band-title h3';
+                    let rule = '{ background: linear-gradient(15deg, ' + day.gradient_a + ', ' + day.gradient_b + ') }';
+                    if (stylesheet.insertRule) {
+                        stylesheet.insertRule(selector + rule, stylesheet.cssRules.length);
+                        stylesheet.insertRule(selector + '{ color: white }', stylesheet.cssRules.length);
+                    } else if (stylesheet.addRule) {
+                        stylesheet.addRule(selector, rule, -1);
+                        stylesheet.addRule(selector, '{ color: white }', -1);
+                    }
+                }
+            });
+            program = program.filter(day => !day.gradient_a);
+            return program;
+        }
+        catch(err) {
+            $('<p style="color: red;">' + err.message + '</p>').insertAfter($('main'));
+            return -1;
+        }
+    }
+
+    $('[href="#program1"]').unbind('click');
+    $('[href="#program1"]').click(function(e) {
+        e.preventDefault();
+        let program = getProgram();
+        if (program == -1) {
+            return;
+        }
+
+        let program_elt1 = $('<div id="program1"></div>');
+        $('#result').append(program_elt1);
+        $.each(program, (day_i, day) => {
+            let day_elt = $('<div class="band-title"><h3>' + day.title + '</h3><div class="flex-program" data-title="' + day.title + '"></div></div></div>');
+            table = day_elt.find('.flex-program');
+            $.each(day.table, (column_i, column) => {
+                let column_elt = $(
+                    '<div class="flex-program-column" data-name="' + column.title + '"'
+                        + (column.style ? ' style="' + column.style + '"' : '') + '></div>'
+                );
+                if (column.title) {
+                    let column_title = $(
+                        '<div class="program-title"><h4 style="color: '
+                            + colors[column.color] + ';">' + column.title + '</h4>'
+                            + (column.subtitle ? '<p>' + column.subtitle + '</p>' : '') + '</div>'
+                    );
+                    column_elt.append(column_title);
+                }
+                let items_elt = $('<div class="program-items"></div>');
+                $.each(column.rows, (row_i, row) => {
+                    if (!row.color) {
+                        row.color = column.color;
+                    }
+                    let row_elt = $(
+                        '<div class="program-item"' + (row.style ? ' style="' + row.style + '"' : '') + ' data-name="' + row.hour + row.title.replace(/,/g , '') + '"></div>'
+                    );
+                    let item_elt = '';
+                    if (row.kids && row.kids != "ok") {
+                        row.annotate = 'enfants ' + row.kids;
+                    }
+                    item_elt = $(
+                        '<div class="time"><span style="background-color: ' + colors[row.color ] + '">'
+                            + row.hour + '</span></div><div class="content"><h5>' + (
+                                row.annotate ? '<div class="annotation" style="background: ' + colors[row.color] + '">' + row.annotate + '</div>' : '') + ''
+                            + row.title + '</h5><p>' + row.subtitle + '</p></div>');
+                    row_elt.append(item_elt);
+                    items_elt.append(row_elt);
+                });
+                column_elt.append(items_elt);
+                table.append(column_elt);
+            });
+            program_elt1.append(day_elt);
+
+console.log('test');
+            if (new Date().getFullYear() == 2024) {
+                $('#program1  [data-name="Gymnase Tommie Smith"] .program-item').css('padding-bottom', '10px');
+                // make serre wangari into 2 columns
+                $('#program1  [data-name="Serre Wangari"] .program-items').css('display', 'inline-block');
+                $('#program1  [data-name="Serre Wangari"] .program-items').css('width', '50%');
+                let columns_2 = $('<div class="program-items" style="width: 50%; display: inline-block; vertical-align: top;"></div>');
+                $('#program1  [data-name="Serre Wangari"] .program-item[data-name="12H15BOXCREW"]').detach().appendTo(columns_2);
+                $('#program1  [data-name="Serre Wangari"] .program-item[data-name="12H30Toutes les choses géniales"]').detach().appendTo(columns_2);
+                $('#program1  [data-name="Serre Wangari"]').append(columns_2);
+            }
+
+        });
+    });
+
+    $('[href="#program2"]').unbind('click');
+    $('[href="#program2"]').click(function(e) {
+        e.preventDefault();
+        let program = getProgram();
+        if (program == -1) {
+            return;
+        }
+
+        let program_elt2 = $('<div id="program2"></div>');
+        $('#result').append(program_elt2);
+        $.each(program, (day_i, day) => {
+            let day_elt = $('<div class="band-title"><h3>' + day.title + '</h3><div class="flex-program"></div></div></div>');
+            table = day_elt.find('.flex-program');
+            $.each(day.table, (column_i, column) => {
+                if (column.title) {
+                    let column_elt = $('<div class="flex-program-column"></div>');
+                    let column_title = $(
+                        '<div class="program-title"><h4 style="color: '
+                            + colors[column.color] + ';">' + column.title + '</h4>'
+                            + (column.subtitle ? '<p>' + column.subtitle + '</p>' : '') + '<div class="program-item" style="display: inline-block"><div class="time" style="display: inline-block;"><span style="background-color: ' + colors[column.color ] + '">' + column.hours + '</div></div>'
+                    );
+                    column_elt.append(column_title);
+                    table.append(column_elt);
+                }
+            });
+            program_elt2.append(day_elt);
+        });
+    });
+
+    $('[href="#program3"]').unbind('click');
+    $('[href="#program3"]').click(function(e) {
+        e.preventDefault();
+        console.log(1);
+        let program = getProgram();
+        if (program == -1) {
+            return;
+        }
+
+        let program_elt3 = $('<div id="program3"></div>');
+        $('#result').append(program_elt3);
+        $.each(program, (day_i, day) => {
+            let day_elt = $('<div class="band-title"><h3>' + day.title + '</h3><div class="flex-program"></div></div></div>');
+            table = day_elt.find('.flex-program');
+            $.each(day.table, (column_i, column) => {
+                let column_elt = $(
+                    '<div class="flex-program-column" style="flex-basis: 100%;' + column.style + '"' + '></div>'
+                );
+                let column_title = $(
+                    '<div class="program-title"><h4 style="color: '
+                        + colors[column.color] + ';">' + column.title.replace('<br>', ' ') + '</h4> '
+                        + (column.subtitle ? '<p>' + column.subtitle.replace('<br>', ' ') + '</p>' : '') + '</div>'
+                );
+                column_elt.append(column_title);
+                $.each(column.rows, (row_i, row) => {
+                    if (!row.color) {
+                        row.color = column.color;
+                    }
+                    let row_elt = $(
+                        '<div class="program-item"' + (row.style ? ' style="' + row.style + '"' : '') + '></div>'
+                    );
+                    let item_elt = '';
+                    item_elt = $(
+                        '<div class="time"><span style="background-color: ' + colors[row.color ] + '">'
+                            + row.hour + '</span></div><div class="content"><h5>'
+                            + row.title.replace('<br>', ' ') + '</h5><p' + (
+                                row.subtitle && row.subtitle.startsWith("×") ? ' class="x"' : ''
+                            ) + '>' + row.subtitle.replace('<br>', ' ') + '' + (
+                                row.annotate ? ' / <i>' + row.annotate + '</i>' : '') + '' + '</p></div>');
+                    row_elt.append(item_elt);
+                    column_elt.append(row_elt);
+                });
+                table.append(column_elt);
+            });
+            program_elt3.append(day_elt);
+        });
+    });
+
+    $('[href="#program4"]').unbind('click');
+    $('[href="#program4"]').click(function(e) {
+        e.preventDefault();
+        let program = getProgram();
+        if (program == -1) {
+            return;
+        }
+
+        let program_elt4 = $('<div id="program4"></div>');
+        $('#result').append(program_elt4);
+        $.each(program, (day_i, day) => {
+            let day_elt = $('<div class="band-title"><h3>' + day.title + '</h3><div class="flex-program"></div></div></div>');
+            table = day_elt.find('.flex-program');
+            let flag_day = false;
+            $.each(day.table, (column_i, column) => {
+                let column_elt = $(
+                    '<div class="flex-program-column" style="flex-basis: 100%;' + column.style + '"' + '></div>'
+                );
+                let column_title = $(
+                    '<div class="program-title"><h4 style="color: '
+                        + colors[column.color] + ';">' + column.title.replace('<br>', ' ') + '</h4> '
+                        + (column.subtitle ? '<p>' + column.subtitle.replace('<br>', ' ') + '</p>' : '') + '</div>'
+                );
+                let flag = false;
+                $.each(column.rows, (row_i, row) => {
+                    if (!row.kids) {
+                        return;
+                    }
+                    if (!flag) {
+                        flag = true;
+                        flag_day = true;
+                        column_elt.append(column_title);
+                    }
+                    if (!row.color) {
+                        row.color = column.color;
+                    }
+                    let row_elt = $(
+                        '<div class="program-item"' + (row.style ? ' style="' + row.style + '"' : '') + '></div>'
+                    );
+                    let item_elt = '';
+                    item_elt = $(
+                        '<div class="time"><span style="background-color: ' + colors[row.color ] + '">'
+                            + row.hour + '</span></div><div class="content"><h5>'
+                            + row.title.replace('<br>', ' ') + '</h5><p>' + row.subtitle.replace('<br>', ' ') + '</p></div>');
+                    row_elt.append(item_elt);
+                    column_elt.append(row_elt);
+                });
+                table.append(column_elt);
+            });
+            if (flag_day) {
+                program_elt4.append(day_elt);
+            }
+        });
+    });
+
+    $('[href="#program5"]').unbind('click');
+    $('[href="#program5"]').click(function(e) {
+        e.preventDefault();
+        let program = getProgram();
+        if (program == -1) {
+            return;
+        }
+        let program_elt5 = $('<div id="program5"></div>');
+        $('#result').append(program_elt5);
+        const printedArtists = [];
+
+        function printAllDatesOfArtist(artistName, preElement) {
+            for (const day of program) {
+                for (const column of day.table) {
+                    let flag = false;
+                    for (const row of column.rows) {
+                        if (row.title === artistName) {
+                            flag = true;
+                            preElement.append(`📆 ${day.title} à ${row.hour}\n`);
+                        }
+                    }
+                    if (flag) {
+                        preElement.append(`📍 ${column.title.toUpperCase()}\n${column.subtitle || ''}\n93400 Saint-Ouen\n🎟 GRATUIT, entrée libre\n\n`);
+                    }
+                }
+            }
+        }
+
+        for (const day of program) {
+            for (const column of day.table) {
+                for (const row of column.rows) {
+                    if (!printedArtists.includes(row.title)) {
+                        let preElement = $('<textarea></textarea>');
+                        preElement.append(`✨ ${row.title.toUpperCase()} ✨\n${row.subtitle}\nAu programme du festival Saint-Ouen sur Scène 🎉\n\n`);
+                        printAllDatesOfArtist(row.title, preElement);
+                        printedArtists.push(row.title);
+                        preElement.append(`[ INSÉRER TEXTE ICI ]\n\n[ INSÉRER HASHTAGS ICI ]`);
+                        console.log(preElement);
+                        program_elt5.append(preElement);
+                    }
+                }
+            }
+        }
+    });
+
+    $('[href="#program6"]').unbind('click');
+    $('[href="#program6"]').click(function(e) {
+        e.preventDefault();
+        let program = getProgram();
+        if (program == -1) {
+            return;
+        }
+        let program_elt6 = $('<div id="program6"></div>');
+        $('#result').append(program_elt6);
+        let preElement = $('<textarea></textarea>');
+        for (const day of program) {
+            preElement.append(`✨ ${day.title.toUpperCase().replace('<br>', ' ')} :\n`);
+            let printedArtists = [];
+            for (const column of day.table) {
+                for (const row of column.rows) {
+                    if (!printedArtists.includes(row.title)) {
+                        printedArtists.push(row.title);
+                        preElement.append(`• ${row.title.toUpperCase().replace('<br>', ' ')}`);
+                        if (row.kids) {
+                            if (row.kids == 'ok') {
+                                preElement.append(' (enfants)');
+                            } else {
+                                preElement.append(` (${row.kids})`);
+                            }
+                        }
+                        if (row.subtitle) {
+                            preElement.append(` (${row.subtitle.replace('<br>', ' ')})`);
+                        }
+                        if (row.instagram) {
+                            preElement.append(` @{row.instagram}\n`);
+                       } else {
+                            preElement.append(` @[INSÉRER INSTAGRAM ICI]\n`);
+                       }
+                    }
+                }
+            }
+            preElement.append(`\n`);
+        }
+        program_elt6.append(preElement);
+    });
+
+$('[href="#program7"]').unbind('click');
+$('[href="#program7"]').click(function(e) {
+    e.preventDefault();
+    let program = getProgram();
+    if (program == -1) {
+        return;
+    }
+    let program_elt7 = $('<div id="program7"></div>');
+    $('#result').append(program_elt7);
+    let preElement = $('<textarea></textarea>');
+
+    for (const day of program) {
+        // Add the day title with the 📍 emoji
+        preElement.append(`📍 ${day.title.replace('<br>', ' ').toUpperCase()} 📍\n\n`);
+
+        for (const column of day.table) {
+            // Construct the line with title, location, and hours
+            preElement.append(`✨ ${column.title.replace('<br>', ' ')}, ${column.subtitle.replace('<br>', ' ')} - ${column.hours}\n`);
+        }
+
+        preElement.append(`\n`); // Add a new line after each day
+    }
+
+    program_elt7.append(preElement);
+});
+
+
+
+$('[href="#program8"]').unbind('click');
+$('[href="#program8"]').click(function(e) {
+    e.preventDefault();
+    let program = getProgram();
+    if (program == -1) {
+        return;
+    }
+    let program_elt8 = $('<div id="program8"></div>');
+    $('#result').append(program_elt8);
+
+    for (const day of program) {
+        for (const column of day.table) {
+            // Create the location title
+            let locationTitle = $('<h3 style="margin-bottom: 0; color: ' + colors[column.color] + '"></h3>').addClass('band-title').text(column.title.toUpperCase());
+            // Create the location address
+            let locationAddress = $('<p style="margin-top: 0;"></p>').text(`📍 ${column.subtitle}`);
+
+            // Append the title and address to the program element
+            program_elt8.append(locationTitle);
+            program_elt8.append(locationAddress);
+        }
+    }
+});
+
+
+$('[href="#program9"]').unbind('click');
+$('[href="#program9"]').click(function(e) {
+    e.preventDefault();
+    let program = getProgram();
+    if (program == -1) {
+        return;
+    }
+    let program_elt9 = $('<div id="program9"></div>');
+    $('#result').append(program_elt9);
+    let preElement = $('<textarea></textarea>');
+
+    // Add the main title "PROGRAMMATION"
+    preElement.append(`PROGRAMMATION\n‼️⚠️ Strictement confidentielle, ne pas partager, même en privé\n\n`);
+
+    for (const day of program) {
+        // Add the day title in uppercase
+        preElement.append(`${day.title.toUpperCase()}\n\n`);
+
+        for (const column of day.table) {
+            // Add the location title with an emoji and the hours
+            preElement.append(`🗺️ ${column.title.replace('<br>', ' ')} - ${column.hours}\n`);
+            // Add the location address with the 📍 emoji
+            preElement.append(`📍${column.subtitle.replace('<br>', ' ')}\n`);
+
+            for (const row of column.rows) {
+                // Add each event with time, title, and subtitle
+                preElement.append(`· ${row.hour} - ${row.title.replace('<br>', ' ')} / ${row.subtitle.replace('<br>', ' ')}` + (row.annotate ? ` (${row.annotate})` : '') + (row.kids ? ` (enfants ${row.kids})` : '') + `\n`);
+            }
+
+            preElement.append(`\n`); // Add a new line after each location
+        }
+
+        preElement.append(`\n`); // Add a new line after each day
+    }
+
+    program_elt9.append(preElement);
+});
+
+$('[href="#program10"]').unbind('click');
+$('[href="#program10"]').click(function(e) {
+    e.preventDefault();
+    let program = getProgram();
+    if (program == -1) {
+        return;
+    }
+    let program_elt10 = $('<div id="program10"></div>');
+    $('#result').append(program_elt10);
+    let preElement = $('<textarea></textarea>');
+
+    // Add the main title "PROGRAMMATION"
+    preElement.append(`PROGRAMMATION\n\n`);
+
+    for (const day of program) {
+        // Add the day title in uppercase
+        preElement.append(`${day.title.toUpperCase()}\n\n`);
+
+        for (const column of day.table) {
+            // Add the location title with an emoji and the hours
+            preElement.append(`🗺️ ${column.title.replace('<br>', ' ')} - ${column.hours}\n`);
+            // Add the location address with the 📍 emoji
+            preElement.append(`📍${column.subtitle.replace('<br>', ' ')}\n`);
+
+            for (const row of column.rows) {
+                // Add each event with time, title, and subtitle
+                preElement.append(`✨ ${row.hour} - ${row.title.replace('<br>', ' ')} / ${row.subtitle.replace('<br>', ' ')}` + (row.annotate ? ` (${row.annotate})` : '') + (row.kids ? ` (enfants ${row.kids})` : '') + (row.instagram ? ` ${row.instagram}` : '') + `\n`);
+            }
+
+            preElement.append(`\n`); // Add a new line after each location
+        }
+
+        preElement.append(`\n`); // Add a new line after each day
+    }
+
+    program_elt10.append(preElement);
+});
+
+$('[href="#program11"]').unbind('click');
+$('[href="#program11"]').click(function(e) {
+    e.preventDefault();
+    let program = getProgram();
+    if (program == -1) {
+        return;
+    }
+
+    let program_elt11 = $('<div id="program11"></div>');
+    $('#result').append(program_elt11);
+    let preElement = $('<textarea></textarea>');
+
+    for (const day of program) {
+        for (const column of day.table) {
+            for (const row of column.rows) {
+                // Only process kid-friendly shows
+                if (row.kids) {
+                    preElement.append(`${row.title.toUpperCase()} / ${row.subtitle}\n\n`);
+                    preElement.append(`📆 ${day.title.replace('<br>', ' ').toUpperCase()} à ${row.hour}\n`);
+                    preElement.append(`📍 ${column.title.toUpperCase()}, ${column.subtitle.replace('<br>', ' ')}\n`);
+                    preElement.append(`🎟 GRATUIT, entrée libre\n\n`);
+                }
+            }
+        }
+    }
+
+    program_elt11.append(preElement);
+});
+
+
+$('[href="#program12"]').unbind('click');
+$('[href="#program12"]').click(function(e) {
+    e.preventDefault();
+    let program = getProgram();
+    if (program == -1) {
+        return;
+    }
+
+    let program_elt12 = $('<div id="program12"></div>');
+    $('#result').append(program_elt12);
+    let preElement = $('<textarea></textarea>');
+
+    for (const day of program) {
+        // Add the day title
+        preElement.append(`${day.title.toUpperCase()}\n\n`);
+
+        for (const column of day.table) {
+            for (const row of column.rows) {
+                // List each show followed by an arrow
+                preElement.append(`${row.title} → \n`);
+            }
+        }
+
+        preElement.append(`\n`); // Add a new line after each day
+    }
+
+    program_elt12.append(preElement);
+});
+
+    </script>
+</html>
