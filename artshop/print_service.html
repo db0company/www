@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>danny's art shop printing service</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'media',
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        input[type="radio"] { display: none; }
+
+        .option-card {
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Light Mode Checked State */
+        input[type="radio"]:checked + .option-card {
+            border-color: #18181b;
+            background-color: #18181b;
+            color: white;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        input[type="radio"]:checked + .option-card .text-zinc-500 { color: #a1a1aa; }
+
+        input[type="radio"]:checked + .option-card .paper-visual { background-color: #e4e4e7; border-color: #71717a; }
+        input[type="radio"]:checked + .option-card .border-dashed { border-color: #71717a; }
+
+        /* Dark Mode Checked State */
+        @media (prefers-color-scheme: dark) {
+            input[type="radio"]:checked + .option-card {
+                border-color: #f4f4f5;
+                background-color: #f4f4f5;
+                color: #09090b;
+            }
+            input[type="radio"]:checked + .option-card .text-zinc-400 { color: #52525b; }
+            input[type="radio"]:checked + .option-card .paper-visual { background-color: #27272a; border-color: #a1a1aa; }
+            input[type="radio"]:checked + .option-card .border-dashed { border-color: #a1a1aa; }
+        }
+
+        /* Holographic CSS Animation */
+        .paper-holo {
+            background: linear-gradient(120deg, #ffb3ba, #ffdfba, #ffffba, #baffc9, #bae1ff, #dcb3ff, #ffb3ba);
+            background-size: 300% 300%;
+            animation: holo-shimmer 4s ease infinite;
+        }
+        @keyframes holo-shimmer {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 3px; }
+        .dark ::-webkit-scrollbar-thumb { background: #52525b; }
+        ::-webkit-scrollbar-thumb:hover { background: #9ca3af; }
+    </style>
+</head>
+<body class="min-h-screen p-4 md:p-8 bg-zinc-50 text-zinc-900 dark:bg-zinc-950 dark:text-zinc-100 transition-colors duration-300">
+
+    <header class="max-w-5xl mx-auto flex justify-between items-center mb-10">
+        <h1 class="text-xl font-bold tracking-tight" data-i18n="website_title">danny&apos;s art shop printing service</h1>
+        <div class="flex space-x-2 text-sm font-medium">
+            <button id="lang-en" class="px-2 py-1 border-b-2 border-zinc-900 dark:border-white transition-colors" onclick="setLang('en')">EN</button>
+            <button id="lang-fr" class="px-2 py-1 text-zinc-400 border-b-2 border-transparent hover:text-zinc-900 dark:hover:text-white transition-colors" onclick="setLang('fr')">FR</button>
+        </div>
+    </header>
+
+
+    <div class="max-w-5xl mx-auto mt-16 pb-16">
+        <section class="max-w-5xl space-y-10 text-zinc-700 dark:text-zinc-300 leading-relaxed text-sm md:text-base">
+
+            <!-- General Info -->
+            <ul class="space-y-1 list-disc pl-5 marker:text-zinc-400">
+                <li data-i18n="info_1">A printing service meant for people I know, and projects that share my values :)</li>
+                <li data-i18n="info_3">I offer this service at cost, with the option to add a free donation to support my artistic work and the time spent (I'm poor).</li>
+                <li data-i18n="info_4">I don't do delivery, we'll meet up in Paris to hand over the prints.</li>
+                <li data-i18n="info_5">Payment upon delivery by card or cash, cost price + free donation</li>
+            </ul>
+
+          <h3 class="font-bold text-lg text-zinc-900 dark:text-white mb-4" data-i18n="calculator_title">Price Estimator</h3>
+
+          <div class="flex items-start space-x-3 text-left">
+            <span class="text-xl">ℹ️</span>
+            <div data-i18n="info_6">These prices are an average. If you print very ink-heavy visuals (dark photos, large flat colors...), feel free to round up a bit to balance things out!</div>
+          </div>
+
+    </div>
+
+    <div class="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 relative">
+
+        <!-- Left: Configurator -->
+        <main class="lg:col-span-7 space-y-10">
+
+            <!-- Step 1: Project Type (Always visible) -->
+            <section id="step-category">
+                <h2 class="text-xs tracking-widest uppercase mb-4 font-semibold text-zinc-500 dark:text-zinc-400" data-i18n="step1">1. Project</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="category-container">
+                    <!-- Injected by JS -->
+                </div>
+            </section>
+
+            <!-- Hidden wrapper for progressive disclosure -->
+            <div id="hidden-steps" class="space-y-10 hidden opacity-0 transition-opacity duration-500">
+
+                <!-- Step 2: Size -->
+                <section>
+                    <div class="flex items-baseline justify-between mb-4">
+                        <h2 class="text-xs tracking-widest uppercase font-semibold text-zinc-500 dark:text-zinc-400" data-i18n="step2">2. Size</h2>
+
+                    </div>
+                    <!-- Dynamic Info Box -->
+                    <div id="category-alert" class="mb-4 text-sm bg-zinc-100 dark:bg-zinc-800/50 text-zinc-700 dark:text-zinc-300 p-4 rounded-xl hidden"></div>
+
+                    <div id="format-container" class="grid grid-cols-3 gap-3">
+                        <!-- Injected by JS -->
+                    </div>
+                </section>
+
+                <!-- Step 3: Paper Type -->
+                <section>
+                    <h2 class="text-xs tracking-widest uppercase mb-4 font-semibold text-zinc-500 dark:text-zinc-400" data-i18n="step3">3. Paper</h2>
+
+                    <div id="paper-container" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <!-- Injected by JS -->
+                    </div>
+                </section>
+
+                <!-- Step 4: Print Type -->
+                <section>
+                    <h2 class="text-xs tracking-widest uppercase mb-4 font-semibold text-zinc-500 dark:text-zinc-400" data-i18n="step4">4. Print Type</h2>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="print-container">
+                        <!-- Injected by JS -->
+                    </div>
+                </section>
+
+                <!-- Action Bar -->
+                <section class="bg-white dark:bg-zinc-900 p-5 rounded-2xl border border-zinc-200 dark:border-zinc-800 sticky bottom-4 shadow-sm z-10">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-end">
+                        <div class="mb-4 sm:mb-0">
+                            <div id="calc-breakdown" class="text-xs text-zinc-500 dark:text-zinc-400 font-mono mb-1 h-4"></div>
+                            <div class="flex items-baseline">
+                                <span id="calc-total" class="text-3xl font-bold tracking-tight">0.00€</span>
+                                <span class="text-sm text-zinc-500 dark:text-zinc-400 ml-2 font-medium" data-i18n="price_per_page">/ page</span>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center space-x-3">
+                            <div class="relative">
+                                <input type="number" id="qty" min="1" value="1" class="w-20 p-3 border border-zinc-300 dark:border-zinc-700 rounded-xl text-center font-bold bg-zinc-50 dark:bg-zinc-800 focus:outline-none focus:border-zinc-900 dark:focus:border-white focus:ring-1 focus:ring-zinc-900 dark:focus:ring-white transition">
+                                <span class="absolute -top-6 left-0 right-0 text-center text-xs text-zinc-400 uppercase tracking-wider font-semibold" data-i18n="qty_label">Qty</span>
+                            </div>
+                            <button onclick="addToCart()" class="bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 p-3 rounded-xl flex items-center justify-center hover:bg-zinc-700 dark:hover:bg-white transition shadow-md w-14 h-14" title="Ajouter">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path></svg>
+                            </button>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+
+        <!-- Right: Cart -->
+        <aside class="lg:col-span-5 hidden transition-all duration-300" id="cart-section">
+            <div class="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 p-6 rounded-2xl sticky top-8 shadow-sm flex flex-col h-full max-h-[90vh]">
+                <div class="flex justify-between items-center mb-6 pb-4 border-b border-zinc-100 dark:border-zinc-800">
+                    <h2 class="text-lg font-bold" data-i18n="cart_title">Summary</h2>
+                    <div class="flex space-x-2">
+                        <button onclick="copyCart()" class="p-2 text-zinc-400 hover:text-zinc-900 dark:hover:text-white bg-zinc-50 dark:bg-zinc-800 rounded-lg transition" title="Copier">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path></svg>
+                        </button>
+                        <button onclick="clearCart()" class="p-2 text-zinc-400 hover:text-red-500 bg-zinc-50 dark:bg-zinc-800 rounded-lg transition" title="Vider">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="flex-1 overflow-y-auto mb-6 pr-2" id="cart-items"></div>
+
+                <div class="pt-4 border-t border-zinc-200 dark:border-zinc-800 space-y-4 text-sm">
+                    <div class="flex justify-between items-center text-zinc-600 dark:text-zinc-400">
+                        <span data-i18n="subtotal">Subtotal</span>
+                        <span id="cart-subtotal" class="font-mono text-zinc-900 dark:text-white font-medium">0.00€</span>
+                    </div>
+
+                    <div class="flex justify-between items-start text-zinc-600 dark:text-zinc-400">
+                        <label class="flex items-start space-x-3 cursor-pointer group select-none">
+                            <div class="flex items-center h-5 mt-0.5">
+                                <input type="checkbox" id="donation-check" class="w-4 h-4 accent-zinc-900 dark:accent-white cursor-pointer rounded border-zinc-300" onchange="toggleDonation()">
+                            </div>
+                            <div class="flex-1 text-left">
+                                <span class="block text-sm font-medium text-zinc-900 dark:text-zinc-100 group-hover:opacity-80 transition" data-i18n="donation">Donate (recommended)</span>
+                                <span class="block text-xs text-zinc-400 dark:text-zinc-500 mt-0.5" data-i18n="support_text">Support my work (optional, thanks!)</span>
+                            </div>
+                        </label>
+                        <span id="cart-donation" class="font-mono pt-0.5 font-medium">0.00€</span>
+                    </div>
+
+                    <div class="flex justify-between items-end pt-4 border-t border-zinc-100 dark:border-zinc-800">
+                        <span data-i18n="total" class="font-bold text-lg text-zinc-900 dark:text-white">Estimated Total</span>
+                        <span id="cart-grandtotal" class="text-2xl font-bold font-mono text-zinc-900 dark:text-white">0.00€</span>
+                    </div>
+                </div>
+
+            <button onclick="copyCart()" class="w-full mt-6 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 py-4 rounded-xl font-bold text-lg hover:bg-zinc-800 dark:hover:bg-zinc-200 transition flex justify-center items-center space-x-2">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path></svg>
+              <span data-i18n="checkout">Copy</span>
+            </button>
+          </div>
+        </aside>
+
+    </div>
+
+    <div class="max-w-5xl mx-auto mt-16 pb-16">
+        <section class="max-w-5xl space-y-10 text-zinc-700 dark:text-zinc-300 leading-relaxed text-sm md:text-base">
+
+            <h3 class="font-bold text-lg text-zinc-900 dark:text-white mb-4" data-i18n="printer_title">My printer</h3>
+
+            <!-- Printer Info -->
+            <div class="flex flex-col md:flex-row-reverse md:items-start gap-6 md:gap-10">
+                <!-- Photo: Top on mobile, Right on desktop -->
+                <div class="w-full md:w-2/5 shrink-0">
+                    <img src="printer.png" alt="OKI C834" class="w-full rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-sm object-cover">
+                </div>
+
+                <!-- Text: Bottom on mobile, Left on desktop -->
+                <div class="flex-1">
+                    <ul class="space-y-1 list-disc pl-5 marker:text-zinc-400 mb-6">
+                        <li data-i18n="printer_1" class="font-bold">OKI C834</li>
+                        <li data-i18n="printer_2">Professional printer</li>
+                        <li data-i18n="printer_3">Laser</li>
+                        <li data-i18n="printer_4">Very reliable for flat colors, crisp blacks, no smudging, no drying time, consistent output</li>
+                        <li data-i18n="printer_5">Ideal for illustrated posters and flyers, not ideal for photo paper</li>
+                        <li>
+                          <a href="https://www.tinkco.com/imprimante/19799/toner-oki-c-834nw" target="_blank" class="underline font-medium hover:text-zinc-900 dark:hover:text-white transition">
+                            <span data-i18n="printer_ink">ℹ️ Ink cartridges cost almost 700€ for a full set (black/yellow/magenta/cyan)</span>
+                          </a>
+                        </li>
+                        <li data-i18n="printer_paper">ℹ️ Clairefontaine (or Canson) paper</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Other Services -->
+            <div>
+                <h3 class="font-bold text-lg text-zinc-900 dark:text-white mb-4" data-i18n="other_title">Other services</h3>
+                <ul class="space-y-1 list-disc pl-5 marker:text-zinc-400">
+                    <li data-i18n="other_1">Paper trimmer to cut A5 flyers or business cards etc</li>
+                    <li data-i18n="other_2">Round button maker (3cm / 1.25" diameter)</li>
+                    <li data-i18n="other_3">Rectangular keychains with a photo inside</li>
+                    <li data-i18n="other_4">And other stuff, probably</li>
+                </ul>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- Toast -->
+    <div id="toast" class="fixed bottom-8 left-1/2 transform -translate-x-1/2 bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 px-5 py-3 rounded-xl shadow-xl opacity-0 pointer-events-none transition-opacity duration-300 flex items-center space-x-2 z-50">
+        <svg class="w-5 h-5 text-green-400 dark:text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+        <span data-i18n="copied" class="font-medium text-sm">Copié dans le presse-papier !</span>
+    </div>
+
+    <script>
+        // --- DATA STRUCTURE ---
+        const i18n = {
+            'website_title': { fr: 'danny\'s art shop - Service d\'impression 🖨️', en: 'danny\'s art shop - Printing service 🖨️'},
+            'calculator_title': { fr: 'Estimateur de prix', 'en': 'Price Estimator' },
+            'step1': { fr: '1. Projet', en: '1. Project' },
+            'step2': { fr: '2. Format', en: '2. Size' },
+            'step3': { fr: '3. Papier', en: '3. Paper' },
+            'step4': { fr: '4. Impression', en: '4. Print Type' },
+            'qty_label': { fr: 'Qté', en: 'Qty' },
+            'price_per_page': { fr: '/ page', en: '/ page' },
+            'remove': { fr: 'Retirer', en: 'Remove' },
+            'cart_title': { fr: 'Résumé', en: 'Summary' },
+            'subtotal': { fr: 'Sous-total', en: 'Subtotal' },
+            'donation': { fr: 'Don (recommandé)', en: 'Donate (recommended)' },
+            'support_text': { fr: 'Soutenir mon activité (optionnel, merci !)', en: 'Support my work (optional, thanks!)' },
+            'total': { fr: 'Total Estimé', en: 'Estimated Total' },
+            'ink_word': { fr: 'encre', en: 'ink' },
+            'sheet_word': { fr: 'papier', en: 'paper' },
+            'copied': { fr: 'Copié dans le presse-papier !', en: 'Copied to clipboard!' },
+            'checkout': { fr: 'Copier', en: 'Copy' },
+
+
+            'info_1': { fr: "Un service d'impression pensé pour les gens que je connais, les projets qui partagent mes valeurs :)", en: "A printing service meant for people I know, and projects that share my values :)" },
+            'info_2': { fr: "Contactez-moi si vous avez besoin d'imprimer : affiches, flyers, zines, drag dollars, etc.", en: "Contact me if you need to print: posters, flyers, zines, drag dollars, etc." },
+            'info_3': { fr: "Je propose ce service à prix coûtant, avec possibilité d'ajouter un don libre pour soutenir mon travail artistique et le temps passé (je suis pauvre).", en: "I offer this service at cost, with the option to add a free donation to support my artistic work and the time spent (I'm poor)." },
+            'info_4': { fr: "Je fais pas de livraison, on se retrouve sur Paris pour récupérer les impressions.", en: "I don't do delivery, we'll meet up in Paris to hand over the prints." },
+            'info_5': { fr: "Paiement à la livraison en carte ou en liquide, prix coûtant + don libre", en: "Payment upon delivery by card or cash, cost price + free donation" },
+            'info_6': { fr: "Ces tarifs sont une moyenne. Si vous imprimez des visuels très chargés (photos sombres, grands aplats...), je vous laisse libre d'arrondir un peu au-dessus pour équilibrer !", en: "These prices are an average. If you print very ink-heavy visuals (dark photos, large flat colors...), feel free to round up a bit to balance things out!" },
+
+            'printer_title': { fr: "Mon imprimante", en: "My printer" },
+            'printer_1': { fr: "OKI C834", en: "OKI C834" },
+            'printer_2': { fr: "Imprimante professionnelle", en: "Professional printer" },
+            'printer_3': { fr: "Laser", en: "Laser" },
+            'printer_4': { fr: "Très fiable sur les aplats de couleurs, noirs nets, pas de bavure, pas de temps de séchage, rendu constant", en: "Very reliable for flat colors, crisp blacks, no smudging, no drying time, consistent output" },
+            'printer_5': { fr: "Idéal pour les affiches illustrées, flyers, pas idéal pour papier photo", en: "Ideal for illustrated posters and flyers, not ideal for photo paper" },
+            'printer_ink': {
+                fr: "ℹ️ Les cartouches d'encre coûtent presque 700€ pour un set complet (noir/jaune/magenta/cyan)",
+                en: "ℹ️ Ink cartridges cost almost 700€ for a full set (black/yellow/magenta/cyan)"
+            },
+            'printer_paper': { fr: "ℹ️ Feuilles Clairefontaine (ou Canson)", en: "ℹ️ Clairefontaine (or Canson) paper" },
+
+            'other_title': { fr: "Autres services", en: "Other services" },
+            'other_1': { fr: "Massicot pour découper des flyers en A5 ou des cartes de visites etc", en: "Paper trimmer to cut A5 flyers or business cards etc" },
+            'other_2': { fr: "Machine à badges ronds 3cm diamètre", en: "Round button maker (3cm / 1.25\″ diameter)" },
+            'other_3': { fr: "Portes clés rectangles avec une photo à l'intérieur", en: "Rectangular keychains with a photo inside" },
+            'other_4': { fr: "Et d'autres trucs, sûrement", en: "And other stuff, probably" }
+        };
+
+        const categories = {
+            'regular': { fr: 'Standard', en: 'Standard', i: '📄', desc: { fr: 'Toute utilisation : personnelle, lettres, admin, flyers, posters, zines, drag dollars and more', en: 'Any use: personal, letters, admin, flyers, posters, zines, drag dollars and more' } },
+            'dcp': { fr: 'Prints', en: 'Prints', i: '⭐', desc: { fr: 'Papier <b>DCP</b><br>Lisse et ultra blanc, garantie d\'impression nette', en: '<b>DCP paper</b><br>Smooth and ultra-white, guaranteed clear printing' } },
+            'canson': { fr: 'Prints texturé', en: 'Textured Prints', i: '✨', desc: { fr: '<b>Canson</b> Acrylique<br>Légérement texturé, Risque de légers défauts d&apos;impression sur les grands aplats', en: '<b>Canson</b> Acrylic<br>Lightly textured, risk of minor printing defects on large flat colors' } },
+            'stickers': { fr: 'Autocollants', en: 'Stickers', i: '🏷️', desc: { fr: 'Résistant à la saleté, l\'huile, l\'humidité, UV et températures extrêmes (-20°C à +80°C)', en: 'Resistant to dirt, oil, moisture, UV, and extreme temperatures (-20°C to +80°C / -4°F to +176°F)' } }
+        };
+
+        // Category Contextual Info Boxes ---
+        const categoryAlerts = {
+            'stickers': {
+                fr: `<div class="flex items-start space-x-3 text-left">
+                        <span class="text-xl">ℹ️</span>
+                        <div>
+                            Dispose autant d'autocollants que tu le souhaites sur ta page de format A4, tu pourras les découper toi-même ensuite.<br>
+                            <span class="opacity-70 text-xs block mt-2">Résiste à la saleté, l'huile, l'humidité, aux UV et aux températures (-20°C à +80°C).</span>
+                        </div>
+                     </div>`,
+                en: `<div class="flex items-start space-x-3 text-left">
+                        <span class="text-xl">ℹ️</span>
+                        <div>
+                            Arrange as many stickers as you&apos;d like on your A4 sheet, then cut them individually yourself.<br>
+                            <span class="opacity-70 text-xs block mt-2">Resistant to dirt, oil, moisture, UV, and temperatures (-20°C to +80°C / -4°F to +176°F).</span>
+                        </div>
+                     </div>`
+            }
+        };
+
+        const inkPrices = {
+            'A5': { 'bw_text': 0.01, 'bw_img': 0.03, 'col_white': 0.05, 'col_color': 0.23 },
+            'A4': { 'bw_text': 0.02, 'bw_img': 0.06, 'col_white': 0.09, 'col_color': 0.45 },
+            'A3': { 'bw_text': 0.04, 'bw_img': 0.12, 'col_white': 0.18, 'col_color': 0.90 }
+        };
+
+        const printTypes = {
+            'bw_text': { fr: 'Noir et blanc - Textes', en: 'Black & White - Text', i: '📝' },
+            'bw_img': { fr: 'Noir et blanc - Images', en: 'Black & White - Images', i: '📰' },
+            'col_white': { fr: 'Couleur - Fond blanc', en: 'Color - White background', i: '🎨' },
+            'col_color': { fr: 'Couleur - Fond coloré', en: 'Color - Colored background', i: '🖼️' }
+        };
+
+        const paperData = {
+            'regular': {
+                'A5': [{ id: '80g', n: {fr:'80g/m²', en:'80g/m²'}, p: 0.02 }],
+                'A4': [
+                    { id: '60g', n: {fr:'60g/m² Fin', en:'60g/m² Thin'}, d: {fr:'Fin, on peut potentiellement voir à travers si les imprimés sont très foncés', en:'Thin; you can potentially see through it if the print is very dark.'}, p: 0.02 },
+                    { id: '80g', n: {fr:'80g/m²', en:'80g/m²'}, d: {fr:'Le plus classique', en:'Standard'}, p: 0.03 },
+                    {
+                        id: '80g_c',
+                        n: { fr: '80g/m² Coloré', en: '80g/m² Colored' },
+                        d: {
+                            fr: `<span class="flex flex-wrap gap-x-3 gap-y-2 mt-2">
+                    <span class="flex items-center"><span class="w-3 h-3 rounded-sm bg-red-500 border border-black/10 dark:border-white/10 mr-1.5"></span>Rouge</span>
+                    <span class="flex items-center"><span class="w-3 h-3 rounded-sm bg-blue-500 border border-black/10 dark:border-white/10 mr-1.5"></span>Bleu</span>
+                    <span class="flex items-center"><span class="w-3 h-3 rounded-sm bg-green-500 border border-black/10 dark:border-white/10 mr-1.5"></span>Vert</span>
+                    <span class="flex items-center"><span class="w-3 h-3 rounded-sm bg-yellow-400 border border-black/10 dark:border-white/10 mr-1.5"></span>Jaune</span>
+                    <span class="flex items-center"><span class="w-3 h-3 rounded-sm bg-pink-200 border border-black/10 dark:border-white/10 mr-1.5"></span>Rose pastel</span>
+                    <span class="flex items-center"><span class="w-3 h-3 rounded-sm bg-yellow-200 border border-black/10 dark:border-white/10 mr-1.5"></span>Jaune pastel</span>
+                    <span class="flex items-center"><span class="w-3 h-3 rounded-sm bg-green-200 border border-black/10 dark:border-white/10 mr-1.5"></span>Vert pastel</span>
+                    <span class="flex items-center"><span class="w-3 h-3 rounded-sm bg-blue-200 border border-black/10 dark:border-white/10 mr-1.5"></span>Bleu pastel</span>
+                 </span>`,
+            en: `<span class="flex flex-wrap gap-x-3 gap-y-2 mt-2">
+                    <span class="flex items-center"><span class="w-3 h-3 rounded-sm bg-red-500 border border-black/10 dark:border-white/10 mr-1.5"></span>Red</span>
+                    <span class="flex items-center"><span class="w-3 h-3 rounded-sm bg-blue-500 border border-black/10 dark:border-white/10 mr-1.5"></span>Blue</span>
+                    <span class="flex items-center"><span class="w-3 h-3 rounded-sm bg-green-500 border border-black/10 dark:border-white/10 mr-1.5"></span>Green</span>
+                    <span class="flex items-center"><span class="w-3 h-3 rounded-sm bg-yellow-400 border border-black/10 dark:border-white/10 mr-1.5"></span>Yellow</span>
+                    <span class="flex items-center"><span class="w-3 h-3 rounded-sm bg-pink-200 border border-black/10 dark:border-white/10 mr-1.5"></span>Pastel pink</span>
+                    <span class="flex items-center"><span class="w-3 h-3 rounded-sm bg-yellow-200 border border-black/10 dark:border-white/10 mr-1.5"></span>Pastel yellow</span>
+                    <span class="flex items-center"><span class="w-3 h-3 rounded-sm bg-green-200 border border-black/10 dark:border-white/10 mr-1.5"></span>Pastel green</span>
+                    <span class="flex items-center"><span class="w-3 h-3 rounded-sm bg-blue-200 border border-black/10 dark:border-white/10 mr-1.5"></span>Pastel blue</span>
+                 </span>`
+                        },
+                        p: 0.06
+                    },
+                    { id: '90g', n: {fr:'90g/m²', en:'90g/m²'}, d: {fr:'Légèrement épais, opaque', en:'Slightly thick, opaque'}, p: 0.04 },
+                    { id: '160g', n: {fr:'160g/m² Épais', en:'160g/m² Thick'}, d: {fr:'bien épais', en:'thiccc'}, p: 0.10 }
+                ],
+                'A3': [
+                    { id: '80g', n: {fr:'80g/m²', en:'80g/m²'}, p: 0.06 },
+                    { id: '110g', n: {fr:'110g/m² Épais', en:'110g/m² Thick'}, p: 0.08 }
+                ]
+            },
+            'dcp': {
+                'A4': [{ id: '350g_d', n: {fr:'350g/m² DCP', en:'350g/m² DCP'}, p: 0.10 }],
+                'A3': [{ id: '300g_d', n: {fr:'300g/m² DCP', en:'300g/m² DCP'}, p: 0.16 }]
+            },
+            'canson': {
+                'A5': [{ id: '300g_c', n: {fr:'300g/m² Canson', en:'300g/m² Canson'}, p: 0.18 }],
+                'A4': [{ id: '300g_c', n: {fr:'300g/m² Canson', en:'300g/m² Canson'}, p: 0.30 }],
+                'A3': [{ id: '300g_c', n: {fr:'300g/m² Canson', en:'300g/m² Canson'}, p: 0.56 }]
+            },
+            'stickers': {
+                'A4': [
+                    { id: 'stick', n: {fr:'Standard', en:'Standard'}, p: 2.00, v: 'normal' },
+                    {
+                        id: 'stick_h',
+                        n: {fr:'Holographique', en:'Holographic'},
+                        p: 2.00,
+                        v: 'holo',
+                        extras: [
+                            { name: { fr: 'holographique', en: 'holographic' }, p: 0.47 }
+                        ]
+                    },
+                ]
+            }
+        };
+
+        const dimensions = {
+            'A5': { cm: '14.8 × 21 cm', in: '5.8 × 8.3 in' },
+            'A4': { cm: '21 × 29.7 cm', in: '8.3 × 11.7 in' },
+            'A3': { cm: '29.7 × 42 cm', in: '11.7 × 16.5 in' }
+        };
+
+        const defaultSettings = {
+            'regular': {
+                'A5': { paper: '80g', print: 'col_white' },
+                'A4': { paper: '80g', print: 'col_white' },
+                'A3': { paper: '80g', print: 'col_white' }
+            },
+            'dcp': {
+                'A4': { paper: '350g_d', print: 'col_color' },
+                'A3': { paper: '300g_d', print: 'col_color' }
+            },
+            'canson': {
+                'A5': { paper: '300g_c', print: 'col_color' },
+                'A4': { paper: '300g_c', print: 'col_color' },
+                'A3': { paper: '300g_c', print: 'col_color' }
+            },
+            'stickers': {
+                'A4': { paper: 'stick', print: 'col_color' }
+            }
+        };
+
+        // --- STATE ---
+        let state = {
+            lang: navigator.language.startsWith('fr') ? 'fr' : 'en',
+            category: null,
+            size: null,
+            paperId: null,
+            printId: 'bw_text',
+            cart: [],
+            includeDonation: true
+        };
+
+        // --- INIT ---
+        function init() {
+            const savedCart = localStorage.getItem('printCart');
+            if (savedCart) state.cart = JSON.parse(savedCart);
+
+            const savedDonation = localStorage.getItem('printDonation');
+            if (savedDonation !== null) state.includeDonation = savedDonation === 'true';
+
+            document.getElementById('donation-check').checked = state.includeDonation;
+
+            renderCategories();
+            renderPrintOptions();
+            updateLangUI();
+            updateCartUI();
+        }
+
+        // --- RENDER UI ---
+        function renderCategories() {
+            const container = document.getElementById('category-container');
+            container.innerHTML = Object.keys(categories).map(id => `
+                <label class="cursor-pointer block relative">
+                    <input type="radio" name="projectType" value="${id}" ${state.category === id ? 'checked' : ''} onchange="selectCategory('${id}')">
+                    <div class="option-card rounded-2xl p-4 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 flex items-center h-full">
+                        <span class="text-2xl mr-4">${categories[id].i}</span>
+                        <div>
+                            <div class="text-sm font-bold leading-tight">${categories[id][state.lang]}</div>
+                            <div class="text-xs text-zinc-500 dark:text-zinc-400 mt-1">${categories[id].desc[state.lang]}</div>
+                        </div>
+                    </div>
+                </label>
+            `).join('');
+        }
+
+        function renderFormatOptions() {
+
+            const alertBox = document.getElementById('category-alert');
+            if (categoryAlerts[state.category]) {
+                alertBox.innerHTML = categoryAlerts[state.category][state.lang];
+                alertBox.classList.remove('hidden');
+            } else {
+                alertBox.classList.add('hidden');
+            }
+
+            if(!state.category) return;
+            const container = document.getElementById('format-container');
+            const availableSizes = Object.keys(paperData[state.category]);
+
+            const visuals = {
+                'A5': `<div class="relative w-[45px] h-[64px] flex items-center justify-center mb-2">
+                         <div class="absolute w-[32px] h-[45px] border border-dashed border-zinc-400 dark:border-zinc-600 rounded-sm"></div>
+                         <div class="absolute w-[22.5px] h-[32px] bg-white dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-600 shadow-sm rounded-sm paper-visual transition-colors" style="bottom: 9.5px; right: 6.5px;"></div>
+                       </div>`,
+                'A4': `<div class="relative w-[45px] h-[64px] flex items-center justify-center mb-2">
+                         <div class="absolute w-[32px] h-[45px] border border-dashed border-zinc-400 dark:border-zinc-600 rounded-sm"></div>
+                         <div class="absolute w-[32px] h-[45px] bg-white dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-600 shadow-sm rounded-sm paper-visual transition-colors"></div>
+                       </div>`,
+                'A3': `<div class="relative w-[45px] h-[64px] flex items-center justify-center mb-2">
+                         <div class="absolute w-[45px] h-[64px] bg-white dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-600 shadow-sm rounded-sm paper-visual transition-colors"></div>
+                         <div class="absolute w-[32px] h-[45px] border border-dashed border-zinc-400 dark:border-zinc-600 rounded-sm" style="bottom: 0; left: 0;"></div>
+                       </div>`
+                };
+
+                container.innerHTML = ['A5', 'A4', 'A3'].map(f => {
+                const isAvail = availableSizes.includes(f);
+                if (!isAvail) return '';
+
+                return `
+                <label class="cursor-pointer block relative">
+                    <input type="radio" name="formatSize" value="${f}" ${state.size === f ? 'checked' : ''} onchange="selectSize('${f}')">
+                    <div class="option-card rounded-2xl p-3 flex flex-col items-center justify-center bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 h-full min-h-[7.5rem]">
+                        ${visuals[f]}
+                        <span class="text-sm font-bold tracking-wide">${f}</span>
+                        <span class="text-xs text-zinc-500 dark:text-zinc-400 mt-1 text-center">${state.lang === 'fr' ? dimensions[f].cm : dimensions[f].cm + '<br>' + dimensions[f].in}</span>
+                    </div>
+                </label>
+                `;
+            }).join('');
+
+        }
+
+        function renderPaperOptions() {
+            if(!state.category || !state.size) return;
+
+            const container = document.getElementById('paper-container');
+            const papers = paperData[state.category][state.size];
+
+            const paperVisuals = {
+                'normal': `<div class="w-12 h-12 rounded-full bg-white dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-600 shadow-sm mb-3"></div>`,
+                'holo': `<div class="w-12 h-12 rounded-full shadow-sm mb-3 border border-zinc-200 dark:border-zinc-700 paper-holo"></div>`
+            };
+
+            container.innerHTML = papers.map(p => `
+                <label class="cursor-pointer block relative">
+                    <input type="radio" name="paperType" value="${p.id}" ${state.paperId === p.id ? 'checked' : ''} onchange="selectPaper('${p.id}')">
+                    <div class="option-card rounded-2xl p-4 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 flex flex-col ${p.v ? 'items-center justify-center text-center' : 'justify-center'} h-full min-h-[5rem]">
+                        ${p.v ? paperVisuals[p.v] : ''}
+                        <span class="text-sm font-bold leading-tight ${p.v ? '' : 'mb-1'}">${p.n[state.lang]}</span>
+                        ${p.d ? `<span class="text-xs text-zinc-500 dark:text-zinc-400 leading-snug ${p.v ? 'mt-1' : ''}">${p.d[state.lang]}</span>` : ''}
+                    </div>
+                </label>
+            `).join('');
+        }
+
+        function renderPrintOptions() {
+            const container = document.getElementById('print-container');
+            container.innerHTML = Object.keys(printTypes).map(id => `
+                <label class="cursor-pointer block relative">
+                    <input type="radio" name="printType" value="${id}" ${state.printId === id ? 'checked' : ''} onchange="selectPrint('${id}')">
+                    <div class="option-card rounded-2xl p-4 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 flex items-center h-full">
+                        <span class="text-2xl mr-3">${printTypes[id].i}</span>
+                        <span class="text-sm font-medium leading-snug">${printTypes[id][state.lang]}</span>
+                    </div>
+                </label>
+            `).join('');
+        }
+
+        // --- ACTIONS ---
+        function selectCategory(id) {
+            state.category = id;
+
+            // Reveal UI
+            const wrapper = document.getElementById('hidden-steps');
+            wrapper.classList.remove('hidden');
+            setTimeout(() => wrapper.classList.remove('opacity-0'), 10);
+
+            // Auto-select valid format
+            const availableSizes = Object.keys(paperData[id]);
+            if (!availableSizes.includes(state.size)) {
+                state.size = availableSizes.includes('A4') ? 'A4' : availableSizes[0];
+            }
+
+            // Apply smart defaults for this specific category and size
+            const defs = defaultSettings[state.category]?.[state.size];
+            if (defs) {
+                state.paperId = defs.paper;
+                state.printId = defs.print;
+            }
+
+            renderCategories();
+            selectSize(state.size); // cascades down
+            renderPrintOptions(); // Force print UI to update to the new default
+        }
+
+        function selectSize(size) {
+            state.size = size;
+
+            const papers = paperData[state.category][state.size];
+            if (!papers.find(p => p.id === state.paperId)) {
+                const defs = defaultSettings[state.category]?.[state.size];
+                state.paperId = defs ? defs.paper : papers[0].id;
+            }
+
+            renderFormatOptions();
+            renderPaperOptions();
+            updatePrice();
+        }
+
+        function selectPaper(id) {
+            state.paperId = id;
+            renderPaperOptions();
+            updatePrice();
+        }
+
+        function selectPrint(id) {
+            state.printId = id;
+            renderPrintOptions();
+            updatePrice();
+        }
+
+        function toggleDonation() {
+            state.includeDonation = document.getElementById('donation-check').checked;
+            localStorage.setItem('printDonation', state.includeDonation);
+            updateCartUI();
+                }
+
+        function updatePrice() {
+            if (!state.category || !state.size || !state.paperId) return;
+
+            const inkPrice = inkPrices[state.size][state.printId];
+            const paper = paperData[state.category][state.size].find(p => p.id === state.paperId);
+            const basePaperPrice = paper.p;
+
+            let extraPrice = 0;
+            let extraText = '';
+
+            if (paper.extras) {
+                paper.extras.forEach(extra => {
+                    extraPrice += extra.p;
+                    extraText += ` + ${extra.name[state.lang]} ${extra.p.toFixed(2)}€`;
+                });
+            }
+
+            const total = inkPrice + basePaperPrice + extraPrice;
+
+            document.getElementById('calc-total').innerText = total.toFixed(2) + '€';
+
+            const wordInk = i18n.ink_word[state.lang];
+            const wordSheet = i18n.sheet_word[state.lang];
+
+            document.getElementById('calc-breakdown').innerText = `${wordInk} ${inkPrice.toFixed(2)}€ + ${wordSheet} ${basePaperPrice.toFixed(2)}€${extraText} =`;
+        }
+
+        // --- CART LOGIC ---
+        function addToCart() {
+            const qtyInput = document.getElementById('qty');
+            const qty = parseInt(qtyInput.value);
+            if (qty < 1 || isNaN(qty)) return;
+
+            const paper = paperData[state.category][state.size].find(p => p.id === state.paperId);
+
+            let extraPrice = 0;
+            if (paper.extras) {
+                extraPrice = paper.extras.reduce((sum, extra) => sum + extra.p, 0);
+            }
+
+            const unitPrice = inkPrices[state.size][state.printId] + paper.p + extraPrice;
+
+            const existingIndex = state.cart.findIndex(item =>
+                item.category === state.category &&
+                item.size === state.size &&
+                item.paperId === state.paperId &&
+                item.printId === state.printId
+            );
+
+            if (existingIndex !== -1) {
+                state.cart[existingIndex].qty += qty;
+            } else {
+                state.cart.push({
+                    id: Date.now(),
+                    category: state.category,
+                    size: state.size,
+                    paperId: state.paperId,
+                    printId: state.printId,
+                    unitPrice: unitPrice,
+                    qty: qty
+                });
+            }
+
+            saveCart();
+            updateCartUI();
+            qtyInput.value = 1;
+        }
+
+        function removeFromCart(id) {
+            state.cart = state.cart.filter(item => item.id !== id);
+            saveCart();
+            updateCartUI();
+        }
+
+        function clearCart() {
+            state.cart = [];
+            saveCart();
+            updateCartUI();
+        }
+
+        function saveCart() { localStorage.setItem('printCart', JSON.stringify(state.cart)); }
+
+        function updateCartUI() {
+            const section = document.getElementById('cart-section');
+            const container = document.getElementById('cart-items');
+
+            if (state.cart.length === 0) {
+                section.classList.add('hidden', 'opacity-0');
+                return;
+            }
+
+            section.classList.remove('hidden');
+            setTimeout(() => section.classList.remove('opacity-0'), 10);
+
+            let subtotal = 0;
+
+            container.innerHTML = state.cart.map(item => {
+                const paper = paperData[item.category][item.size].find(p => p.id === item.paperId);
+                const print = printTypes[item.printId];
+                const lineTotal = item.qty * item.unitPrice;
+                subtotal += lineTotal;
+
+                return `
+                    <div class="mb-3 pb-3 border-b border-zinc-100 dark:border-zinc-800 flex justify-between items-start group">
+                        <div class="flex-1 pr-2">
+                            <div class="text-sm font-bold flex items-baseline">
+                                <span class="bg-zinc-100 dark:bg-zinc-800 text-xs px-1.5 py-0.5 rounded font-mono mr-2">${item.qty}x</span>
+                                ${item.size} — ${paper.n[state.lang]}
+                            </div>
+                            <div class="text-xs text-zinc-500 dark:text-zinc-400 mt-1 pl-8">${print[state.lang]}</div>
+                        </div>
+                        <div class="flex flex-col items-end">
+                            <span class="text-sm font-mono">${lineTotal.toFixed(2)}€</span>
+                            <button onclick="removeFromCart(${item.id})" class="text-xs text-red-400 opacity-0 group-hover:opacity-100 transition mt-1 font-medium hover:text-red-600">${i18n.remove[state.lang]}</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+                    let donation = 0;
+                    if (subtotal > 0 && state.includeDonation) {
+                    let baseDonation = (subtotal * 0.10) + 2;
+                    let targetTotal = Math.round(subtotal + baseDonation);
+                    donation = targetTotal - subtotal;
+                    }
+
+            const donEl = document.getElementById('cart-donation');
+            if (state.includeDonation) {
+                donEl.innerText = donation.toFixed(2) + '€';
+                donEl.className = 'font-mono pt-0.5 text-zinc-900 dark:text-white font-medium';
+            } else {
+                donEl.innerText = '0.00€';
+                donEl.className = 'font-mono pt-0.5 text-zinc-400 dark:text-zinc-600 line-through';
+            }
+
+            document.getElementById('cart-subtotal').innerText = subtotal.toFixed(2) + '€';
+            document.getElementById('cart-grandtotal').innerText = (subtotal + donation).toFixed(2) + '€';
+        }
+
+        function copyCart() {
+            if (state.cart.length === 0) return;
+            let text = `${i18n.cart_title[state.lang]}\n-------------------\n`;
+            let subtotal = 0;
+
+            state.cart.forEach(item => {
+                const paper = paperData[item.category][item.size].find(p => p.id === item.paperId);
+                const print = printTypes[item.printId];
+                const lineTotal = item.qty * item.unitPrice;
+                subtotal += lineTotal;
+                text += `${item.qty}x ${item.size} - ${paper.n[state.lang]} - ${print[state.lang]} = ${lineTotal.toFixed(2)}€\n`;
+            });
+
+            text += `-------------------\n`;
+            text += `${i18n.subtotal[state.lang]}: ${subtotal.toFixed(2)}€\n`;
+
+                    let donation = 0;
+                    if (state.includeDonation) {
+                    let baseDonation = (subtotal * 0.10) + 2;
+                    let targetTotal = Math.round(subtotal + baseDonation);
+                    donation = targetTotal - subtotal;
+
+                    text += `${i18n.donation[state.lang]}: ${donation.toFixed(2)}€\n`;
+                    }
+            text += `${i18n.total[state.lang]}: ${(subtotal + donation).toFixed(2)}€`;
+
+            navigator.clipboard.writeText(text).then(() => {
+                const toast = document.getElementById('toast');
+                toast.classList.remove('opacity-0');
+                setTimeout(() => toast.classList.add('opacity-0'), 2500);
+            });
+        }
+
+        // --- LANGUAGE ---
+        function setLang(lang) {
+            state.lang = lang;
+            document.getElementById('lang-fr').className = lang === 'fr' ? 'px-2 py-1 border-b-2 border-zinc-900 dark:border-white text-zinc-900 dark:text-white transition-colors' : 'px-2 py-1 text-zinc-400 border-b-2 border-transparent hover:text-zinc-900 dark:hover:text-white transition-colors';
+            document.getElementById('lang-en').className = lang === 'en' ? 'px-2 py-1 border-b-2 border-zinc-900 dark:border-white text-zinc-900 dark:text-white transition-colors' : 'px-2 py-1 text-zinc-400 border-b-2 border-transparent hover:text-zinc-900 dark:hover:text-white transition-colors';
+            updateLangUI();
+        }
+
+        function updateLangUI() {
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (i18n[key] && i18n[key][state.lang]) el.innerText = i18n[key][state.lang];
+            });
+            renderCategories();
+            renderFormatOptions();
+            renderPaperOptions();
+            renderPrintOptions();
+            if(state.category) updatePrice();
+            updateCartUI();
+        }
+
+        window.onload = init;
+    </script>
+</body>
+</html>
