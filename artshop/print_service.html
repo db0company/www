@@ -1064,7 +1064,7 @@
 
                     if (item.laminationId && item.laminationId !== 'none') {
                         const lamObj = laminationData[item.size].find(l => l.id === item.laminationId);
-                        desc2 += ` + ${i18n.lamination_word[state.lang]} (${lamObj.n[state.lang]})`;
+                        desc2 += ` + ${i18n.lamination_word[state.lang]} (${lamObj.desc[state.lang]})`;
                     }
                     if (item.cutId && item.cutId !== 'none') {
                         const cutObj = cutData[item.category][item.size].find(c => c.id === item.cutId);
@@ -1133,7 +1133,7 @@
 
                     if (item.laminationId && item.laminationId !== 'none') {
                         const lamObj = laminationData[item.size].find(l => l.id === item.laminationId);
-                        lineStr += ` + ${i18n.lamination_word[state.lang]} (${lamObj.n[state.lang]})`;
+                        lineStr += ` + ${i18n.lamination_word[state.lang]} (${lamObj.desc[state.lang]})`;
                     }
                     if (item.cutId && item.cutId !== 'none') {
                         const cutObj = cutData[item.category][item.size].find(c => c.id === item.cutId);
