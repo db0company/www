@@ -38,6 +38,9 @@
         input[type="radio"]:checked + .option-card .text-zinc-500 { color: #a1a1aa; }
 
         input[type="radio"]:checked + .option-card .paper-visual { background-color: #e4e4e7; border-color: #71717a; }
+
+        input[type="radio"]:checked + .option-card .paper-visual-svg { fill: #e4e4e7; stroke: #71717a; }
+
         input[type="radio"]:checked + .option-card .border-dashed { border-color: #71717a; }
 
         /* Dark Mode Checked State */
@@ -49,6 +52,7 @@
             }
             input[type="radio"]:checked + .option-card .text-zinc-400 { color: #52525b; }
             input[type="radio"]:checked + .option-card .paper-visual { background-color: #27272a; border-color: #a1a1aa; }
+            input[type="radio"]:checked + .option-card .paper-visual-svg { fill: #27272a; stroke: #a1a1aa; }
             input[type="radio"]:checked + .option-card .border-dashed { border-color: #a1a1aa; }
         }
 
@@ -93,6 +97,8 @@
                 <li data-i18n="info_5">Payment upon delivery by card or cash, cost price + free donation</li>
             </ul>
 
+      </section>
+
           <h3 class="font-bold text-lg text-zinc-900 dark:text-white mb-4" data-i18n="calculator_title">Price Estimator</h3>
 
           <div class="flex items-start space-x-3 text-left">
@@ -133,7 +139,7 @@
                 </section>
 
                 <!-- Step 3: Paper Type -->
-                <section>
+                <section id="step-paper">
                     <h2 class="text-xs tracking-widest uppercase mb-4 font-semibold text-zinc-500 dark:text-zinc-400" data-i18n="step3">3. Paper</h2>
 
                     <div id="paper-container" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -142,12 +148,36 @@
                 </section>
 
                 <!-- Step 4: Print Type -->
-                <section>
+                <section id="step-print">
                     <h2 class="text-xs tracking-widest uppercase mb-4 font-semibold text-zinc-500 dark:text-zinc-400" data-i18n="step4">4. Print Type</h2>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="print-container">
                         <!-- Injected by JS -->
                     </div>
                 </section>
+
+                <!-- Step Extra: Finitions (Optional) -->
+                <section id="step-finishes" class="hidden">
+                    <h2 class="text-xs tracking-widest uppercase mb-4 font-semibold text-zinc-500 dark:text-zinc-400">
+                        <span data-i18n="step_finishes">Extras</span>
+                        <span class="lowercase normal-case font-normal">(<span data-i18n="optional">Optional</span>)</span>
+                    </h2>
+
+                    <div id="lamination-wrapper" class="hidden mb-4">
+                        <h3 class="text-xs font-bold mb-2 text-zinc-400" data-i18n="lamination_label">Lamination</h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3" id="lamination-container"></div>
+                    </div>
+
+                    <div id="cut-wrapper" class="hidden mb-4">
+                        <h3 class="text-xs font-bold mb-2 text-zinc-400" data-i18n="cut_label">Cutting</h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="cut-container"></div>
+                    </div>
+
+                    <div id="pack-wrapper" class="hidden">
+                        <h3 class="text-xs font-bold mb-2 text-zinc-400" data-i18n="pack_label">Packaging</h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="pack-container"></div>
+                    </div>
+                </section>
+
 
                 <!-- Action Bar -->
                 <section class="bg-white dark:bg-zinc-900 p-5 rounded-2xl border border-zinc-200 dark:border-zinc-800 sticky bottom-4 shadow-sm z-10">
@@ -165,8 +195,8 @@
                                 <input type="number" id="qty" min="1" value="1" class="w-20 p-3 border border-zinc-300 dark:border-zinc-700 rounded-xl text-center font-bold bg-zinc-50 dark:bg-zinc-800 focus:outline-none focus:border-zinc-900 dark:focus:border-white focus:ring-1 focus:ring-zinc-900 dark:focus:ring-white transition">
                                 <span class="absolute -top-6 left-0 right-0 text-center text-xs text-zinc-400 uppercase tracking-wider font-semibold" data-i18n="qty_label">Qty</span>
                             </div>
-                            <button onclick="addToCart()" class="bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 p-3 rounded-xl flex items-center justify-center hover:bg-zinc-700 dark:hover:bg-white transition shadow-md w-14 h-14" title="Ajouter">
-                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path></svg>
+                            <button onclick="addToCart()" class="bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 p-3 rounded-xl flex items-center justify-center hover:bg-zinc-700 dark:hover:bg-white transition shadow-md w-14 h-14" title="Add">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" ><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path></svg>
                             </button>
                         </div>
                     </div>
@@ -180,10 +210,10 @@
                 <div class="flex justify-between items-center mb-6 pb-4 border-b border-zinc-100 dark:border-zinc-800">
                     <h2 class="text-lg font-bold" data-i18n="cart_title">Summary</h2>
                     <div class="flex space-x-2">
-                        <button onclick="copyCart()" class="p-2 text-zinc-400 hover:text-zinc-900 dark:hover:text-white bg-zinc-50 dark:bg-zinc-800 rounded-lg transition" title="Copier">
+                        <button onclick="copyCart()" class="p-2 text-zinc-400 hover:text-zinc-900 dark:hover:text-white bg-zinc-50 dark:bg-zinc-800 rounded-lg transition" title="Copy">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path></svg>
                         </button>
-                        <button onclick="clearCart()" class="p-2 text-zinc-400 hover:text-red-500 bg-zinc-50 dark:bg-zinc-800 rounded-lg transition" title="Vider">
+                        <button onclick="clearCart()" class="p-2 text-zinc-400 hover:text-red-500 bg-zinc-50 dark:bg-zinc-800 rounded-lg transition" title="Empty">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                         </button>
                     </div>
@@ -247,7 +277,7 @@
                         <li data-i18n="printer_5">Ideal for illustrated posters and flyers, not ideal for photo paper</li>
                         <li>
                           <a href="https://www.tinkco.com/imprimante/19799/toner-oki-c-834nw" target="_blank" class="underline font-medium hover:text-zinc-900 dark:hover:text-white transition">
-                            <span data-i18n="printer_ink">ℹ️ Ink cartridges cost almost 700€ for a full set (black/yellow/magenta/cyan)</span>
+                            <span data-i18n="printer_ink">ℹ️ Toner costs almost 700€ for a full set (black/yellow/magenta/cyan)</span>
                           </a>
                         </li>
                         <li data-i18n="printer_paper">ℹ️ Clairefontaine (or Canson) paper</li>
@@ -272,7 +302,7 @@
     <!-- Toast -->
     <div id="toast" class="fixed bottom-8 left-1/2 transform -translate-x-1/2 bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 px-5 py-3 rounded-xl shadow-xl opacity-0 pointer-events-none transition-opacity duration-300 flex items-center space-x-2 z-50">
         <svg class="w-5 h-5 text-green-400 dark:text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-        <span data-i18n="copied" class="font-medium text-sm">Copié dans le presse-papier !</span>
+        <span data-i18n="copied" class="font-medium text-sm">Copied to clipboard!</span>
     </div>
 
     <script>
@@ -282,10 +312,11 @@
             'calculator_title': { fr: 'Estimateur de prix', 'en': 'Price Estimator' },
             'step1': { fr: '1. Projet', en: '1. Project' },
             'step2': { fr: '2. Format', en: '2. Size' },
+            'optional': { fr: 'Optionnel', en: 'Optional' },
             'step3': { fr: '3. Papier', en: '3. Paper' },
             'step4': { fr: '4. Impression', en: '4. Print Type' },
             'qty_label': { fr: 'Qté', en: 'Qty' },
-            'price_per_page': { fr: '/ page', en: '/ page' },
+            'price_per_page': { fr: '/ unité', en: '/ unit' },
             'remove': { fr: 'Retirer', en: 'Remove' },
             'cart_title': { fr: 'Résumé', en: 'Summary' },
             'subtotal': { fr: 'Sous-total', en: 'Subtotal' },
@@ -294,8 +325,16 @@
             'total': { fr: 'Total Estimé', en: 'Estimated Total' },
             'ink_word': { fr: 'encre', en: 'ink' },
             'sheet_word': { fr: 'papier', en: 'paper' },
+            'lamination_word': { fr: 'plastification', en: 'laminating sheet' },
             'copied': { fr: 'Copié dans le presse-papier !', en: 'Copied to clipboard!' },
             'checkout': { fr: 'Copier', en: 'Copy' },
+
+            'step_finishes': { fr: 'Extra', en: 'Extras' },
+            'lamination_label': { fr: 'Plastification', en: 'Lamination' },
+            'cut_label': { fr: 'Découpe au massicot', en: 'Cutting' },
+            'pack_label': { fr: 'Emballage de protection', en: 'Protective packaging' },
+            'pack_word': { fr: 'emballage', en: 'packaging' },
+
 
 
             'info_1': { fr: "Un service d'impression pensé pour les gens que je connais, les projets qui partagent mes valeurs :)", en: "A printing service meant for people I know, and projects that share my values :)" },
@@ -312,8 +351,8 @@
             'printer_4': { fr: "Très fiable sur les aplats de couleurs, noirs nets, pas de bavure, pas de temps de séchage, rendu constant", en: "Very reliable for flat colors, crisp blacks, no smudging, no drying time, consistent output" },
             'printer_5': { fr: "Idéal pour les affiches illustrées, flyers, pas idéal pour papier photo", en: "Ideal for illustrated posters and flyers, not ideal for photo paper" },
             'printer_ink': {
-                fr: "ℹ️ Les cartouches d'encre coûtent presque 700€ pour un set complet (noir/jaune/magenta/cyan)",
-                en: "ℹ️ Ink cartridges cost almost 700€ for a full set (black/yellow/magenta/cyan)"
+                fr: "ℹ️ Les cartouches de toner coûtent presque 700€ pour un set complet (noir/jaune/magenta/cyan)",
+                en: "ℹ️ Toner costs almost 700€ for a full set (black/yellow/magenta/cyan)"
             },
             'printer_paper': { fr: "ℹ️ Feuilles Clairefontaine (ou Canson)", en: "ℹ️ Clairefontaine (or Canson) paper" },
 
@@ -325,10 +364,12 @@
         };
 
         const categories = {
-            'regular': { fr: 'Standard', en: 'Standard', i: '📄', desc: { fr: 'Toute utilisation : personnelle, lettres, admin, flyers, posters, zines, drag dollars and more', en: 'Any use: personal, letters, admin, flyers, posters, zines, drag dollars and more' } },
-            'dcp': { fr: 'Prints', en: 'Prints', i: '⭐', desc: { fr: 'Papier <b>DCP</b><br>Lisse et ultra blanc, garantie d\'impression nette', en: '<b>DCP paper</b><br>Smooth and ultra-white, guaranteed clear printing' } },
-            'canson': { fr: 'Prints texturé', en: 'Textured Prints', i: '✨', desc: { fr: '<b>Canson</b> Acrylique<br>Légérement texturé, Risque de légers défauts d&apos;impression sur les grands aplats', en: '<b>Canson</b> Acrylic<br>Lightly textured, risk of minor printing defects on large flat colors' } },
-            'stickers': { fr: 'Autocollants', en: 'Stickers', i: '🏷️', desc: { fr: 'Résistant à la saleté, l\'huile, l\'humidité, UV et températures extrêmes (-20°C à +80°C)', en: 'Resistant to dirt, oil, moisture, UV, and extreme temperatures (-20°C to +80°C / -4°F to +176°F)' } }
+            'regular': { fr: 'Standard', en: 'Standard', i: '📄', desc: { fr: 'Toute utilisation : personnelle, lettres, admin, flyers, posters, zines, drag dollars et autre', en: 'Any use: personal, letters, admin, flyers, posters, zines, drag dollars and more' } },
+            'dcp': { fr: 'Prints', en: 'Prints', i: '⭐', desc: { fr: 'Papier <b>DCP</b><br>Lisse et ultra blanc, garantie d\'impression nette', en: '<b>DCP paper</b><br>Smooth and ultra-white, guaranteed clear printing' }, hasPackaging: true },
+            'canson': { fr: 'Prints texturés', en: 'Textured Prints', i: '✨', desc: { fr: '<b>Canson</b> Acrylique<br>Légèrement texturé, risque de légers défauts d&apos;impression sur les grands aplats', en: '<b>Canson</b> Acrylic<br>Lightly textured, risk of minor printing defects on large flat colors' }, hasPackaging: true },
+            'stickers': { fr: 'Autocollants', en: 'Stickers', i: '🏷️', desc: { fr: 'Résistant à la saleté, l\'huile, l\'humidité, UV et températures extrêmes (-20°C à +80°C)', en: 'Resistant to dirt, oil, moisture, UV, and extreme temperatures (-20°C to +80°C / -4°F to +176°F)' }, hasPackaging: true },
+            'badge': { fr: 'Badge', en: 'Badge', i: '🟡', desc: { fr: 'Badge rond à épingle', en: 'Round pinback button' }, isMerch: true, hasPackaging: true },
+            'keychain': { fr: 'Porte-clés', en: 'Keychain', i: '🔑', desc: { fr: 'Acrylique transparent', en: 'Clear acrylic' }, isMerch: true, hasPackaging: true }
         };
 
         // Category Contextual Info Boxes ---
@@ -338,14 +379,12 @@
                         <span class="text-xl">ℹ️</span>
                         <div>
                             Dispose autant d'autocollants que tu le souhaites sur ta page de format A4, tu pourras les découper toi-même ensuite.<br>
-                            <span class="opacity-70 text-xs block mt-2">Résiste à la saleté, l'huile, l'humidité, aux UV et aux températures (-20°C à +80°C).</span>
                         </div>
                      </div>`,
                 en: `<div class="flex items-start space-x-3 text-left">
                         <span class="text-xl">ℹ️</span>
                         <div>
                             Arrange as many stickers as you&apos;d like on your A4 sheet, then cut them individually yourself.<br>
-                            <span class="opacity-70 text-xs block mt-2">Resistant to dirt, oil, moisture, UV, and temperatures (-20°C to +80°C / -4°F to +176°F).</span>
                         </div>
                      </div>`
             }
@@ -354,15 +393,68 @@
         const inkPrices = {
             'A5': { 'bw_text': 0.01, 'bw_img': 0.03, 'col_white': 0.05, 'col_color': 0.23 },
             'A4': { 'bw_text': 0.02, 'bw_img': 0.06, 'col_white': 0.09, 'col_color': 0.45 },
-            'A3': { 'bw_text': 0.04, 'bw_img': 0.12, 'col_white': 0.18, 'col_color': 0.90 }
+            'A3': { 'bw_text': 0.04, 'bw_img': 0.12, 'col_white': 0.18, 'col_color': 0.90 },
+            // Merch prices are bundled in paperData, so ink is zero
+            '3cm': { 'default': 0 },
+            'round': { 'default': 0 },
+            'rect': { 'default': 0 },
+            'heart': { 'default': 0 }
         };
 
         const printTypes = {
             'bw_text': { fr: 'Noir et blanc - Textes', en: 'Black & White - Text', i: '📝' },
             'bw_img': { fr: 'Noir et blanc - Images', en: 'Black & White - Images', i: '📰' },
             'col_white': { fr: 'Couleur - Fond blanc', en: 'Color - White background', i: '🎨' },
-            'col_color': { fr: 'Couleur - Fond coloré', en: 'Color - Colored background', i: '🖼️' }
+            'col_color': { fr: 'Couleur - Fond coloré', en: 'Color - Colored background', i: '🖼️' },
+            'default': { fr: '', en: '', i: '' }
         };
+
+        const laminationData = {
+            'A4': [
+                { id: 'none', n: {fr: 'Non plastifié', en: 'Not laminated'}, desc: { fr: 'par défaut', en: 'by default' }, p: 0 },
+                { id: 'lam_75', n: {fr: 'Plastifié', en: 'Laminated' }, desc: {fr: '75 microns', en: '75 microns'}, p: 0.16 },
+                { id: 'lam_125', n: {fr: 'Plastifié (épais)', en: 'Laminated (thick)' }, desc: {fr: '125 microns', en: '125 microns'}, p: 0.28 }
+            ],
+            'A5': [
+                { id: 'none', n: {fr: 'Non plastifié', en: 'Not laminated'}, desc: { fr: 'par défaut', en: 'by default' }, p: 0 },
+                { id: 'lam_125', n: {fr: 'Plastifié (épais)', en: 'Laminated (thick)' }, desc: {fr: '125 microns', en: '125 microns'}, p: 0.22 }
+            ]
+        };
+
+        const cutData = {
+            'dcp': {
+                'A4': [
+                    { id: 'none', n: {fr: 'Sans découpe', en: 'No cut'}, p: 0 },
+                    { id: 'cut_a6', n: {fr: 'Découpé en A6 (4 par page)', en: 'Cut into 4 A6 prints'}, p: 0 },
+                    { id: 'cut_business', n: {fr: 'Découpé en cartes de visites', en: 'Cut into business cards'}, p: 0 }
+                ]
+            },
+        'canson': {
+                'A4': [
+                   { id: 'none', n: {fr: 'Sans découpe', en: 'No cut'}, p: 0 },
+                    { id: 'cut_a6', n: {fr: 'Découpé en A6 (4 par page)', en: 'Cut into 4 A6 prints'}, p: 0 },
+                    { id: 'cut_business', n: {fr: 'Découpé en cartes de visites', en: 'Cut into business cards'}, p: 0 }
+        ]
+        }
+        };
+
+      const packPrices = {
+            'dcp':      { 'A6': 0.12 * 4, 'A5': 0.20, 'A4': 0.40, 'A3': 0.40, 'business': 0.40 },
+            'canson':   { 'A6': 0.12 * 4, 'A5': 0.20, 'A4': 0.40, 'A3': 0.40, 'business': 0.40 },
+            'stickers': { 'A4': 0.30 },
+            'badge':    { '3cm': 0.30 },
+            'keychain': { 'round': 0.30, 'rect': 0.30, 'heart': 0.30 }
+        };
+
+        function getPackPrice(category, size, cutId) {
+            if (!categories[category]?.hasPackaging) return 0;
+            let finalSize = size;
+            if (size === 'A4') {
+                if (cutId === 'cut_a6') finalSize = 'A6';
+                else if (cutId === 'cut_business') finalSize = 'business';
+            }
+            return packPrices[category]?.[finalSize] || 0;
+        }
 
         const paperData = {
             'regular': {
@@ -397,8 +489,8 @@
                         },
                         p: 0.06
                     },
-                    { id: '90g', n: {fr:'90g/m²', en:'90g/m²'}, d: {fr:'Légèrement épais, opaque', en:'Slightly thick, opaque'}, p: 0.04 },
-                    { id: '160g', n: {fr:'160g/m² Épais', en:'160g/m² Thick'}, d: {fr:'bien épais', en:'thiccc'}, p: 0.10 }
+                    { id: '90g', n: {fr:'90g/m²', en:'90g/m²'}, d: {fr:'Légèrement épais, opaque', en:'Slightly thick, opaque'}, p: 0.04, noLam: true },
+                    { id: '160g', n: {fr:'160g/m² Épais', en:'160g/m² Thick'}, d: {fr:'bien épais', en:'thiccc'}, p: 0.10, noLam: true }
                 ],
                 'A3': [
                     { id: '80g', n: {fr:'80g/m²', en:'80g/m²'}, p: 0.06 },
@@ -406,13 +498,14 @@
                 ]
             },
             'dcp': {
+                'A5': [{ id: '350g_d', n: {fr:'350g/m² DCP', en:'350g/m² DCP'}, p: 0.07 }],
                 'A4': [{ id: '350g_d', n: {fr:'350g/m² DCP', en:'350g/m² DCP'}, p: 0.10 }],
                 'A3': [{ id: '300g_d', n: {fr:'300g/m² DCP', en:'300g/m² DCP'}, p: 0.16 }]
             },
             'canson': {
-                'A5': [{ id: '300g_c', n: {fr:'300g/m² Canson', en:'300g/m² Canson'}, p: 0.18 }],
-                'A4': [{ id: '300g_c', n: {fr:'300g/m² Canson', en:'300g/m² Canson'}, p: 0.30 }],
-                'A3': [{ id: '300g_c', n: {fr:'300g/m² Canson', en:'300g/m² Canson'}, p: 0.56 }]
+                'A5': [{ id: '300g_c', n: {fr:'300g/m² Canson', en:'300g/m² Canson'}, d: {fr:'Gamme CANSON Graduate Acrylic', en:'CANSON Graduate Acrylic'}, p: 0.18 }],
+                'A4': [{ id: '300g_c', n: {fr:'300g/m² Canson', en:'300g/m² Canson'}, d: {fr:'Gamme CANSON Graduate Acrylic', en:'CANSON Graduate Acrylic'}, p: 0.30 }],
+                'A3': [{ id: '300g_c', n: {fr:'300g/m² Canson', en:'300g/m² Canson'}, d: {fr:'Gamme CANSON Graduate Acrylic', en:'CANSON Graduate Acrylic'}, p: 0.56 }]
             },
             'stickers': {
                 'A4': [
@@ -427,13 +520,35 @@
                         ]
                     },
                 ]
+            },
+            'badge': {
+                '3cm': [{ id: 'badge_std', n: {fr: 'Badge', en: 'Badge'}, p: 1.10 }]
+            },
+            'keychain': {
+                'round': [{ id: 'kc_round', n: {fr: 'Rond', en: 'Round'}, p: 1.10 }],
+                'rect': [{ id: 'kc_rect', n: {fr: 'Rectangle', en: 'Rectangle'}, p: 1.10 }],
+                'heart': [{ id: 'kc_heart', n: {fr: 'Cœur', en: 'Heart'}, p: 1.10 }]
             }
+        };
+
+        const formatNames = {
+            'A5': { fr: 'A5', en: 'A5' },
+            'A4': { fr: 'A4', en: 'A4' },
+            'A3': { fr: 'A3', en: 'A3' },
+            '3cm': { fr: '3cm', en: '3cm' },
+            'round': { fr: 'Rond', en: 'Round' },
+            'rect': { fr: 'Rectangle', en: 'Rectangle' },
+            'heart': { fr: 'Cœur', en: 'Heart' }
         };
 
         const dimensions = {
             'A5': { cm: '14.8 × 21 cm', in: '5.8 × 8.3 in' },
             'A4': { cm: '21 × 29.7 cm', in: '8.3 × 11.7 in' },
-            'A3': { cm: '29.7 × 42 cm', in: '11.7 × 16.5 in' }
+            'A3': { cm: '29.7 × 42 cm', in: '11.7 × 16.5 in' },
+            '3cm': { cm: '3 cm Ø', in: '1.25 in Ø' },
+            'round': { cm: '3.5 cm Ø', in: '1.4 in Ø' },
+            'rect': { cm: '4.4 × 2.2 cm', in: '1.7 × 0.9 in' },
+            'heart': { cm: '4.2 × 3.5 cm', in: '1.65 × 1.4 in' }
         };
 
         const defaultSettings = {
@@ -443,6 +558,7 @@
                 'A3': { paper: '80g', print: 'col_white' }
             },
             'dcp': {
+                'A5': { paper: '350g_d', print: 'col_color' },
                 'A4': { paper: '350g_d', print: 'col_color' },
                 'A3': { paper: '300g_d', print: 'col_color' }
             },
@@ -453,8 +569,19 @@
             },
             'stickers': {
                 'A4': { paper: 'stick', print: 'col_color' }
+            },
+            'badge': {
+                '3cm': { paper: 'badge_std', print: 'default' }
+            },
+            'keychain': {
+                'round': { paper: 'kc_round', print: 'default' },
+                'rect': { paper: 'kc_rect', print: 'default' },
+                'heart': { paper: 'kc_heart', print: 'default' }
             }
         };
+
+        const DONATION_MIN = 3;
+        const DONATION_RATE = 0.25;
 
         // --- STATE ---
         let state = {
@@ -463,14 +590,21 @@
             size: null,
             paperId: null,
             printId: 'bw_text',
+            laminationId: 'none',
+            cutId: 'none',
+            packId: 'none',
             cart: [],
             includeDonation: true
         };
 
         // --- INIT ---
         function init() {
-            const savedCart = localStorage.getItem('printCart');
-            if (savedCart) state.cart = JSON.parse(savedCart);
+            try {
+                const savedCart = localStorage.getItem('printCart');
+                if (savedCart) state.cart = JSON.parse(savedCart);
+            } catch(e) {
+                localStorage.removeItem('printCart');
+            }
 
             const savedDonation = localStorage.getItem('printDonation');
             if (savedDonation !== null) state.includeDonation = savedDonation === 'true';
@@ -479,7 +613,7 @@
 
             renderCategories();
             renderPrintOptions();
-            updateLangUI();
+            setLang(state.lang);
             updateCartUI();
         }
 
@@ -526,29 +660,117 @@
                 'A3': `<div class="relative w-[45px] h-[64px] flex items-center justify-center mb-2">
                          <div class="absolute w-[45px] h-[64px] bg-white dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-600 shadow-sm rounded-sm paper-visual transition-colors"></div>
                          <div class="absolute w-[32px] h-[45px] border border-dashed border-zinc-400 dark:border-zinc-600 rounded-sm" style="bottom: 0; left: 0;"></div>
-                       </div>`
+                       </div>`,
+                '3cm': `<div class="relative w-12 h-12 flex items-center justify-center mb-2"><div class="w-10 h-10 rounded-full bg-white dark:bg-zinc-800 border-[3px] border-zinc-300 dark:border-zinc-600 shadow-sm flex items-center justify-center paper-visual transition-colors"><div class="w-5 h-0.5 bg-zinc-300 dark:bg-zinc-600 rounded-full transform -rotate-45"></div></div></div>`,
+                'round': `<div class="relative w-12 h-12 flex items-center justify-center mb-2"><div class="w-10 h-10 rounded-full bg-white dark:bg-zinc-800 border-[3px] border-zinc-300 dark:border-zinc-600 shadow-sm relative paper-visual transition-colors"><div class="absolute -top-[7px] left-1/2 transform -translate-x-1/2 w-3.5 h-3.5 border-[3px] border-zinc-300 dark:border-zinc-600 rounded-full bg-transparent"></div></div></div>`,
+'rect': `<div class="relative w-12 h-12 flex items-center justify-center mb-2"><div class="w-8 h-[2.5rem] rounded bg-white dark:bg-zinc-800 border-[3px] border-zinc-300 dark:border-zinc-600 shadow-sm relative mt-2 paper-visual transition-colors"><div class="absolute -top-[7px] left-1/2 transform -translate-x-1/2 w-3.5 h-3.5 border-[3px] border-zinc-300 dark:border-zinc-600 rounded-full bg-transparent"></div></div></div>`,
+                'heart': `<div class="relative w-12 h-12 flex items-center justify-center mb-2 mt-2"><div class="relative w-[42px] h-[35px] flex justify-center"><svg viewBox="0 0 32 29.6" class="w-[36px] h-auto overflow-visible fill-white dark:fill-zinc-800 stroke-zinc-300 dark:stroke-zinc-600 paper-visual-svg transition-colors" stroke-width="2.5"><path d="M23.6,0c-3.4,0-6.3,2.7-7.6,5.6C14.7,2.7,11.8,0,8.4,0C3.8,0,0,3.8,0,8.4c0,9.4,9.5,11.9,16,21.2 c6.1-9.3,16-12.1,16-21.2C32,3.8,28.2,0,23.6,0z"/></svg><div class="absolute -top-[10px] w-3.5 h-3.5 border-[3px] border-zinc-300 dark:border-zinc-600 rounded-full bg-transparent z-10"></div></div></div>`
                 };
 
-                container.innerHTML = ['A5', 'A4', 'A3'].map(f => {
-                const isAvail = availableSizes.includes(f);
-                if (!isAvail) return '';
-
-                return `
+            container.innerHTML = availableSizes.map(f => `
                 <label class="cursor-pointer block relative">
                     <input type="radio" name="formatSize" value="${f}" ${state.size === f ? 'checked' : ''} onchange="selectSize('${f}')">
                     <div class="option-card rounded-2xl p-3 flex flex-col items-center justify-center bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 h-full min-h-[7.5rem]">
                         ${visuals[f]}
-                        <span class="text-sm font-bold tracking-wide">${f}</span>
+                        <span class="text-sm font-bold tracking-wide">${formatNames[f][state.lang]}</span>
                         <span class="text-xs text-zinc-500 dark:text-zinc-400 mt-1 text-center">${state.lang === 'fr' ? dimensions[f].cm : dimensions[f].cm + '<br>' + dimensions[f].in}</span>
                     </div>
                 </label>
-                `;
-            }).join('');
+                `).join('');
 
+}
+
+       function renderFinishesOptions() {
+            const section = document.getElementById('step-finishes');
+            let hasAnyFinish = false;
+
+           const currentPaper = paperData[state.category]?.[state.size]?.find(p => p.id === state.paperId);
+            // --- LAMINATION ---
+            const lamWrapper = document.getElementById('lamination-wrapper');
+            if (state.category === 'regular' && laminationData[state.size] && !currentPaper?.noLam) {
+                hasAnyFinish = true;
+                lamWrapper.classList.remove('hidden');
+                const lamContainer = document.getElementById('lamination-container');
+                const opts = laminationData[state.size];
+                if (!opts.find(o => o.id === state.laminationId)) state.laminationId = 'none';
+
+                lamContainer.innerHTML = opts.map(o => `
+                    <label class="cursor-pointer block relative">
+                        <input type="radio" name="lamType" value="${o.id}" ${state.laminationId === o.id ? 'checked' : ''} onchange="selectLamination('${o.id}')">
+                        <div class="option-card rounded-2xl p-3 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 flex flex-col items-center justify-center text-center h-full min-h-[4rem]">
+                            <span class="text-sm font-bold">${o.n[state.lang]}</span>
+                            <span class="mt-1 text-xs text-zinc-500 dark:text-zinc-400">${o.desc[state.lang]}</span>
+                        </div>
+                    </label>
+                `).join('');
+            } else {
+                lamWrapper.classList.add('hidden');
+                state.laminationId = 'none';
+            }
+
+            // --- CUTTING ---
+            const cutWrapper = document.getElementById('cut-wrapper');
+            if (cutData[state.category] && cutData[state.category][state.size]) {
+                hasAnyFinish = true;
+                cutWrapper.classList.remove('hidden');
+                const cutContainer = document.getElementById('cut-container');
+                const opts = cutData[state.category][state.size];
+                if (!opts.find(o => o.id === state.cutId)) state.cutId = 'none';
+
+                cutContainer.innerHTML = opts.map(o => `
+                    <label class="cursor-pointer block relative">
+                        <input type="radio" name="cutType" value="${o.id}" ${state.cutId === o.id ? 'checked' : ''} onchange="selectCut('${o.id}')">
+                        <div class="option-card rounded-2xl p-3 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 flex flex-col items-center justify-center text-center h-full min-h-[4rem]">
+                            <span class="text-sm font-bold">${o.n[state.lang]}</span>
+                        </div>
+                    </label>
+                `).join('');
+            } else {
+                cutWrapper.classList.add('hidden');
+                state.cutId = 'none';
+            }
+
+            // --- PACKAGING ---
+            const packWrapper = document.getElementById('pack-wrapper');
+            if (categories[state.category] && categories[state.category].hasPackaging) {
+                hasAnyFinish = true;
+                packWrapper.classList.remove('hidden');
+                const packContainer = document.getElementById('pack-container');
+
+                let finalSize = state.size;
+                if (state.size === 'A4' && state.cutId === 'cut_a6') finalSize = 'A6';
+                if (state.size === 'A4' && state.cutId === 'cut_business') finalSize = 'business';
+                const pPrice = packPrices[finalSize] || 0;
+
+                const opts = [
+                    { id: 'none', n: {fr: 'Sans emballage', en: 'No packaging'}, p: 0 },
+                    { id: 'pack', n: {fr: 'Avec emballage', en: 'With packaging'}, p: pPrice }
+                ];
+                if (!opts.find(o => o.id === state.packId)) state.packId = 'none';
+
+                packContainer.innerHTML = opts.map(o => `
+                    <label class="cursor-pointer block relative">
+                        <input type="radio" name="packType" value="${o.id}" ${state.packId === o.id ? 'checked' : ''} onchange="selectPack('${o.id}')">
+                        <div class="option-card rounded-2xl p-3 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 flex flex-col items-center justify-center text-center h-full min-h-[4rem]">
+                            <span class="text-sm font-bold">${o.n[state.lang]}</span>
+                        </div>
+                    </label>
+                `).join('');
+            } else {
+                packWrapper.classList.add('hidden');
+                state.packId = 'none';
+            }
+
+            if (hasAnyFinish) {
+                section.classList.remove('hidden');
+            } else {
+                section.classList.add('hidden');
+            }
         }
 
+
         function renderPaperOptions() {
-            if(!state.category || !state.size) return;
+            if(!state.category || !state.size || categories[state.category].isMerch) return;
 
             const container = document.getElementById('paper-container');
             const papers = paperData[state.category][state.size];
@@ -571,8 +793,10 @@
         }
 
         function renderPrintOptions() {
+            if(!state.category || categories[state.category].isMerch) return;
+
             const container = document.getElementById('print-container');
-            container.innerHTML = Object.keys(printTypes).map(id => `
+            container.innerHTML = Object.keys(printTypes).filter(id => id !== 'default').map(id => `
                 <label class="cursor-pointer block relative">
                     <input type="radio" name="printType" value="${id}" ${state.printId === id ? 'checked' : ''} onchange="selectPrint('${id}')">
                     <div class="option-card rounded-2xl p-4 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 flex items-center h-full">
@@ -586,11 +810,21 @@
         // --- ACTIONS ---
         function selectCategory(id) {
             state.category = id;
+            const isMerch = categories[id].isMerch;
 
             // Reveal UI
             const wrapper = document.getElementById('hidden-steps');
             wrapper.classList.remove('hidden');
             setTimeout(() => wrapper.classList.remove('opacity-0'), 10);
+
+            // Toggle sections based on merch status
+            if (isMerch) {
+                document.getElementById('step-paper').classList.add('hidden');
+                document.getElementById('step-print').classList.add('hidden');
+            } else {
+                document.getElementById('step-paper').classList.remove('hidden');
+                document.getElementById('step-print').classList.remove('hidden');
+            }
 
             // Auto-select valid format
             const availableSizes = Object.keys(paperData[id]);
@@ -607,7 +841,7 @@
 
             renderCategories();
             selectSize(state.size); // cascades down
-            renderPrintOptions(); // Force print UI to update to the new default
+            if(!isMerch) renderPrintOptions(); // Force print UI to update to the new default
         }
 
         function selectSize(size) {
@@ -620,13 +854,33 @@
             }
 
             renderFormatOptions();
-            renderPaperOptions();
+            renderFinishesOptions();
+            if(!categories[state.category].isMerch) renderPaperOptions();
+            updatePrice();
+        }
+
+        function selectLamination(id) {
+            state.laminationId = id;
+            renderFinishesOptions();
+            updatePrice();
+        }
+
+        function selectCut(id) {
+            state.cutId = id;
+            renderFinishesOptions();
+            updatePrice();
+        }
+
+        function selectPack(id) {
+            state.packId = id;
+            renderFinishesOptions();
             updatePrice();
         }
 
         function selectPaper(id) {
             state.paperId = id;
             renderPaperOptions();
+            renderFinishesOptions();
             updatePrice();
         }
 
@@ -645,50 +899,113 @@
         function updatePrice() {
             if (!state.category || !state.size || !state.paperId) return;
 
-            const inkPrice = inkPrices[state.size][state.printId];
-            const paper = paperData[state.category][state.size].find(p => p.id === state.paperId);
-            const basePaperPrice = paper.p;
+            const isMerch = categories[state.category].isMerch;
 
-            let extraPrice = 0;
-            let extraText = '';
-
-            if (paper.extras) {
-                paper.extras.forEach(extra => {
-                    extraPrice += extra.p;
-                    extraText += ` + ${extra.name[state.lang]} ${extra.p.toFixed(2)}€`;
-                });
+            let packPrice = 0;
+            let packText = '';
+            if (categories[state.category]?.hasPackaging && state.packId !== 'none') {
+                packPrice = getPackPrice(state.category, state.size, state.cutId);
+                packText = ` + ${i18n.pack_word[state.lang]} ${packPrice.toFixed(2)}€`;
             }
 
-            const total = inkPrice + basePaperPrice + extraPrice;
+            let total = 0;
+            let breakdown = '';
+
+            if (isMerch) {
+                const item = paperData[state.category][state.size].find(p => p.id === state.paperId);
+                total = item.p + packPrice;
+                breakdown = `${categories[state.category][state.lang]} ${item.p.toFixed(2)}€${packText} =`;
+            } else {
+                const inkPrice = inkPrices[state.size][state.printId];
+                const paper = paperData[state.category][state.size].find(p => p.id === state.paperId);
+                const basePaperPrice = paper.p;
+
+                let extraPrice = 0;
+                let extraText = '';
+
+                if (paper.extras) {
+                    paper.extras.forEach(extra => {
+                        extraPrice += extra.p;
+                        extraText += ` + ${extra.name[state.lang]} ${extra.p.toFixed(2)}€`;
+                    });
+                }
+
+                let lamPrice = 0;
+                let lamText = '';
+                if (state.category === 'regular' && laminationData[state.size] && state.laminationId !== 'none') {
+                    const lamObj = laminationData[state.size].find(l => l.id === state.laminationId);
+                    if (lamObj) {
+                        lamPrice = lamObj.p;
+                        lamText = ` + ${i18n.lamination_word[state.lang]} ${lamPrice.toFixed(2)}€`;
+                    }
+                }
+
+                let cutPrice = 0;
+                let cutText = '';
+                if (cutData[state.category] && cutData[state.category][state.size] && state.cutId !== 'none') {
+                    const cutObj = cutData[state.category][state.size].find(c => c.id === state.cutId);
+                    if (cutObj) {
+                        cutPrice = cutObj.p;
+                        if (cutPrice > 0) {
+                            cutText = ` + ${cutObj.n[state.lang].toLowerCase()} ${cutPrice.toFixed(2)}€`;
+                        }
+                    }
+                }
+
+                total = inkPrice + basePaperPrice + extraPrice + lamPrice + cutPrice + packPrice;
+
+                const wordInk = i18n.ink_word[state.lang];
+                const wordSheet = i18n.sheet_word[state.lang];
+                breakdown = `${wordInk} ${inkPrice.toFixed(2)}€ + ${wordSheet} ${basePaperPrice.toFixed(2)}€${extraText}${lamText}${cutText}${packText} =`;
+            }
+
 
             document.getElementById('calc-total').innerText = total.toFixed(2) + '€';
-
-            const wordInk = i18n.ink_word[state.lang];
-            const wordSheet = i18n.sheet_word[state.lang];
-
-            document.getElementById('calc-breakdown').innerText = `${wordInk} ${inkPrice.toFixed(2)}€ + ${wordSheet} ${basePaperPrice.toFixed(2)}€${extraText} =`;
+            document.getElementById('calc-breakdown').innerText = breakdown;
         }
 
         // --- CART LOGIC ---
-        function addToCart() {
+      function addToCart() {
             const qtyInput = document.getElementById('qty');
             const qty = parseInt(qtyInput.value);
             if (qty < 1 || isNaN(qty)) return;
 
+            const isMerch = categories[state.category].isMerch;
             const paper = paperData[state.category][state.size].find(p => p.id === state.paperId);
+            const packPrice = (state.packId !== 'none') ? getPackPrice(state.category, state.size, state.cutId) : 0;
+            let unitPrice = 0;
 
-            let extraPrice = 0;
-            if (paper.extras) {
-                extraPrice = paper.extras.reduce((sum, extra) => sum + extra.p, 0);
+            if (isMerch) {
+                unitPrice = paper.p + packPrice;
+            } else {
+                let extraPrice = 0;
+                if (paper.extras) {
+                    extraPrice = paper.extras.reduce((sum, extra) => sum + extra.p, 0);
+                }
+
+                let lamPrice = 0;
+                if (state.category === 'regular' && laminationData[state.size] && state.laminationId !== 'none') {
+                    const lamObj = laminationData[state.size].find(l => l.id === state.laminationId);
+                    if (lamObj) lamPrice = lamObj.p;
+                }
+
+                let cutPrice = 0;
+                if (cutData[state.category] && cutData[state.category][state.size] && state.cutId !== 'none') {
+                    const cutObj = cutData[state.category][state.size].find(c => c.id === state.cutId);
+                    if (cutObj) cutPrice = cutObj.p;
+                }
+
+                unitPrice = inkPrices[state.size][state.printId] + paper.p + extraPrice + lamPrice + cutPrice + packPrice;
             }
-
-            const unitPrice = inkPrices[state.size][state.printId] + paper.p + extraPrice;
 
             const existingIndex = state.cart.findIndex(item =>
                 item.category === state.category &&
                 item.size === state.size &&
                 item.paperId === state.paperId &&
-                item.printId === state.printId
+                item.printId === state.printId &&
+                item.laminationId === state.laminationId &&
+                item.cutId === state.cutId &&
+                item.packId === state.packId
             );
 
             if (existingIndex !== -1) {
@@ -700,6 +1017,9 @@
                     size: state.size,
                     paperId: state.paperId,
                     printId: state.printId,
+                    laminationId: state.laminationId,
+                    cutId: state.cutId,
+                    packId: state.packId,
                     unitPrice: unitPrice,
                     qty: qty
                 });
@@ -739,34 +1059,58 @@
             let subtotal = 0;
 
             container.innerHTML = state.cart.map(item => {
-                const paper = paperData[item.category][item.size].find(p => p.id === item.paperId);
-                const print = printTypes[item.printId];
+                const isItemMerch = categories[item.category].isMerch;
                 const lineTotal = item.qty * item.unitPrice;
                 subtotal += lineTotal;
 
+                let desc1, desc2;
+
+                if (isItemMerch) {
+                    const fName = formatNames[item.size][state.lang] || item.size;
+                    desc1 = `${categories[item.category][state.lang]} — ${fName}`;
+                    desc2 = (item.packId && item.packId !== 'none') ? i18n.pack_label[state.lang] : '';
+                  } else {
+                      const paper = paperData[item.category][item.size].find(p => p.id === item.paperId);
+                      const print = printTypes[item.printId];
+                      const catName = categories[item.category][state.lang];
+                      desc1 = `${catName} (${item.size}) — ${paper.n[state.lang]}`;
+                      desc2 = print[state.lang];
+
+                    if (item.laminationId && item.laminationId !== 'none') {
+                        const lamObj = laminationData[item.size].find(l => l.id === item.laminationId);
+                        desc2 += ` + ${i18n.lamination_word[state.lang]} (${lamObj.n[state.lang]})`;
+                    }
+                    if (item.cutId && item.cutId !== 'none') {
+                        const cutObj = cutData[item.category][item.size].find(c => c.id === item.cutId);
+                        desc2 += ` + ${cutObj.n[state.lang]}`;
+                    }
+                    if (item.packId && item.packId !== 'none') {
+                        desc2 += ` + ${i18n.pack_label[state.lang]}`;
+                    }
+                }
                 return `
                     <div class="mb-3 pb-3 border-b border-zinc-100 dark:border-zinc-800 flex justify-between items-start group">
                         <div class="flex-1 pr-2">
                             <div class="text-sm font-bold flex items-baseline">
                                 <span class="bg-zinc-100 dark:bg-zinc-800 text-xs px-1.5 py-0.5 rounded font-mono mr-2">${item.qty}x</span>
-                                ${item.size} — ${paper.n[state.lang]}
+                                ${desc1}
                             </div>
-                            <div class="text-xs text-zinc-500 dark:text-zinc-400 mt-1 pl-8">${print[state.lang]}</div>
+                            ${desc2 ? `<div class="text-xs text-zinc-500 dark:text-zinc-400 mt-1 pl-8">${desc2}</div>` : ''}
                         </div>
                         <div class="flex flex-col items-end">
                             <span class="text-sm font-mono">${lineTotal.toFixed(2)}€</span>
-                            <button onclick="removeFromCart(${item.id})" class="text-xs text-red-400 opacity-0 group-hover:opacity-100 transition mt-1 font-medium hover:text-red-600">${i18n.remove[state.lang]}</button>
+                            <button onclick="removeFromCart(${item.id})" class="text-xs text-red-400 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition mt-1 font-medium hover:text-red-600">${i18n.remove[state.lang]}</button>
                         </div>
                     </div>
                 `;
             }).join('');
 
-                    let donation = 0;
-                    if (subtotal > 0 && state.includeDonation) {
-                    let baseDonation = (subtotal * 0.10) + 2;
-                    let targetTotal = Math.round(subtotal + baseDonation);
-                    donation = targetTotal - subtotal;
-                    }
+            let donation = 0;
+            if (subtotal > 0 && state.includeDonation) {
+                let baseDonation = (subtotal * DONATION_RATE) + DONATION_MIN;
+                let targetTotal = Math.round(subtotal + baseDonation);
+                donation = targetTotal - subtotal;
+            }
 
             const donEl = document.getElementById('cart-donation');
             if (state.includeDonation) {
@@ -787,24 +1131,47 @@
             let subtotal = 0;
 
             state.cart.forEach(item => {
-                const paper = paperData[item.category][item.size].find(p => p.id === item.paperId);
-                const print = printTypes[item.printId];
+                const isItemMerch = categories[item.category].isMerch;
                 const lineTotal = item.qty * item.unitPrice;
                 subtotal += lineTotal;
-                text += `${item.qty}x ${item.size} - ${paper.n[state.lang]} - ${print[state.lang]} = ${lineTotal.toFixed(2)}€\n`;
+
+                if (isItemMerch) {
+                    const fName = formatNames[item.size][state.lang] || item.size;
+                    const packStr = (item.packId && item.packId !== 'none') ? ` + ${i18n.pack_label[state.lang]}` : '';
+                    text += `${item.qty}x ${categories[item.category][state.lang]} - ${fName}${packStr} = ${lineTotal.toFixed(2)}€\n`;
+                } else {
+                    const paper = paperData[item.category][item.size].find(p => p.id === item.paperId);
+                    const print = printTypes[item.printId];
+                    const catName = categories[item.category][state.lang];
+                    let lineStr = `${item.qty}x ${catName} (${item.size}) - ${paper.n[state.lang]} - ${print[state.lang]}`;
+
+                    if (item.laminationId && item.laminationId !== 'none') {
+                        const lamObj = laminationData[item.size].find(l => l.id === item.laminationId);
+                        lineStr += ` + ${i18n.lamination_word[state.lang]} (${lamObj.n[state.lang]})`;
+                    }
+                    if (item.cutId && item.cutId !== 'none') {
+                        const cutObj = cutData[item.category][item.size].find(c => c.id === item.cutId);
+                        lineStr += ` + ${cutObj.n[state.lang]}`;
+                    }
+                    if (item.packId && item.packId !== 'none') {
+                        lineStr += ` + ${i18n.pack_label[state.lang]}`;
+                    }
+
+                    text += `${lineStr} = ${lineTotal.toFixed(2)}€\n`;
+                }
             });
 
             text += `-------------------\n`;
             text += `${i18n.subtotal[state.lang]}: ${subtotal.toFixed(2)}€\n`;
 
-                    let donation = 0;
-                    if (state.includeDonation) {
-                    let baseDonation = (subtotal * 0.10) + 2;
-                    let targetTotal = Math.round(subtotal + baseDonation);
-                    donation = targetTotal - subtotal;
+            let donation = 0;
+            if (state.includeDonation) {
+                let baseDonation = (subtotal * DONATION_RATE) + DONATION_MIN;
+                let targetTotal = Math.round(subtotal + baseDonation);
+                donation = targetTotal - subtotal;
 
-                    text += `${i18n.donation[state.lang]}: ${donation.toFixed(2)}€\n`;
-                    }
+                text += `${i18n.donation[state.lang]}: ${donation.toFixed(2)}€\n`;
+            }
             text += `${i18n.total[state.lang]}: ${(subtotal + donation).toFixed(2)}€`;
 
             navigator.clipboard.writeText(text).then(() => {
@@ -825,12 +1192,15 @@
         function updateLangUI() {
             document.querySelectorAll('[data-i18n]').forEach(el => {
                 const key = el.getAttribute('data-i18n');
-                if (i18n[key] && i18n[key][state.lang]) el.innerText = i18n[key][state.lang];
+                if (i18n[key] && i18n[key][state.lang]) el.innerHTML = i18n[key][state.lang];
             });
             renderCategories();
             renderFormatOptions();
-            renderPaperOptions();
-            renderPrintOptions();
+            renderFinishesOptions();
+            if(state.category && !categories[state.category].isMerch) {
+                renderPaperOptions();
+                renderPrintOptions();
+            }
             if(state.category) updatePrice();
             updateCartUI();
         }
